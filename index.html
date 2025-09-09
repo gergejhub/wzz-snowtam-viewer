@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>ECAC Airports — METAR/TAF + SNOWTAM + Eurocontrol Tactical — v18.9</title>
+<title>ECAC Airports — METAR/TAF + SNOWTAM + Eurocontrol Tactical — v19.0 (rebuild)</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
   html, body { height:100%; width:100%; margin:0; padding:0; background:#0e0f12; color:#e9eef3; font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; }
@@ -39,15 +39,9 @@
   .badge-cyan{ border-color:#a5f3fc; background:#cffafe; color:#155e75 }
   .sub { font-size:10px; opacity:.9; margin-left:6px; padding:2px 6px; border-radius:999px; border:1px dashed #93c5fd; background:#e6f0ff; color:#1e3a8a }
   .toast { position: fixed; right: 14px; top: 14px; display:flex; flex-direction:column; gap:8px; z-index: 3000; }
-  .toast .t { background:#14161a; border:1px solid #2a2f39; color:#e9eef3; padding:8px 10px; border-radius:8px; font-size:13px; box-shadow: 0 6px 18px rgba(0,0,0,.3); }
   .diag { position: fixed; left: 12px; bottom: 12px; background:#222; border:1px solid #555; padding:8px 10px; border-radius:6px; font-size:12px; z-index:1000; max-width:60vw; }
-  /* Runway styling fix */
   .runway-rect { stroke: none !important; }
-  .rwy-green{ fill:#77dd77; opacity:.75 }
-  .rwy-yellow{ fill:#ffe680; opacity:.80 }
-  .rwy-orange{ fill:#ffb266; opacity:.82 }
-  .rwy-red{ fill:#ff8080; opacity:.85 }
-  /* Paste modal */
+  .rwy-green{ fill:#77dd77; opacity:.75 } .rwy-yellow{ fill:#ffe680; opacity:.80 } .rwy-orange{ fill:#ffb266; opacity:.82 } .rwy-red{ fill:#ff8080; opacity:.85 }
   .modal { position: fixed; inset: 0; display:none; align-items:center; justify-content:center; background: rgba(0,0,0,.55); z-index: 4000; }
   .modal.show { display:flex; }
   .modal .box { width: min(980px, 95vw); background:#0f1115; border:1px solid #2a2f39; border-radius:10px; box-shadow: 0 20px 40px rgba(0,0,0,.45); }
@@ -61,12 +55,12 @@
 <body>
 <div class="app">
   <div class="topbar">
-    <h1>ECAC Airports — v18.9</h1>
+    <h1>ECAC Airports — v19.0 (rebuild)</h1>
     <span id="lbl-count" style="opacity:.8;font-size:12px;">Airports: —</span>
     <div class="spacer"></div>
     <label class="chip" style="cursor:pointer;"><input id="cb-runways" type="checkbox" /> Show runways</label>
     <button id="btn-euro" class="btn">Fetch Tactical Update</button>
-    <button id="btn-autoTU" class="btn" data-on="0">Auto TU: OFF</button>
+    <button id="btn-autoTU" class="btn" data-on="1">Auto TU: ON</button>
     <span id="tu-next" style="opacity:.7;font-size:12px;">—</span>
     <button id="btn-notif" class="btn">Enable notifications</button>
     <button id="btn-paste" class="btn">Paste TU</button>
@@ -117,7 +111,7 @@
       <button id="pasteClose" class="btn">✕</button>
     </div>
     <div class="bd">
-      <p style="margin:0 0 6px; opacity:.85;">Paste the text from Eurocontrol (Network Headline News → Tactical Update) here. You can paste the raw web page text or the HTML snippet.</p>
+      <p style="margin:0 0 6px; opacity:.85;">If the automatic fetch fails due to CORS, paste the text here.</p>
       <textarea id="tuInput" placeholder="Paste here..."></textarea>
     </div>
     <div class="ft">
@@ -129,7 +123,7 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-const toastWrap=document.getElementById('toast'); function toast(msg){ const d=document.createElement('div'); d.className='t'; d.textContent=msg; toastWrap.appendChild(d); setTimeout(()=>d.remove(), 5200); }
+const toastWrap=document.getElementById('toast'); function toast(msg){ const d=document.createElement('div'); d.className='t'; d.textContent=msg; toastWrap.appendChild(d); setTimeout(()=>d.remove(), 8000); }
 const diag=document.getElementById('diag'); function say(msg){ diag.textContent='Diagnostics: '+msg; console.log('[ECAC]', msg); }
 const lblCount=document.getElementById('lbl-count'); const tuNext=document.getElementById('tu-next');
 
@@ -137,13 +131,27 @@ const map = L.map('map', { worldCopyJump:true }).setView([49,11], 5);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:17, minZoom:3, attribution:'&copy; OpenStreetMap'}).addTo(map);
 const airportLayer=L.layerGroup().addTo(map); const runwayLayer=L.layerGroup().addTo(map);
 
-const PROXIES=[ (u)=>u, (u)=>'https://corsproxy.io/?'+encodeURIComponent(u), (u)=>'https://thingproxy.freeboard.io/fetch/'+u, (u)=>'https://r.jina.ai/http://'+u.replace(/^https?:\/\//,'') ];
+/* fetch helpers */
 function withTimeout(promise, ms, label){ let t; const timeout = new Promise((_,rej)=> t=setTimeout(()=>rej(new Error('Timeout '+(label||'')+' '+ms+'ms')), ms)); return Promise.race([promise.then(v=>{clearTimeout(t); return v;}), timeout]); }
-async function fetchViaAll(url){ let last=null; for(const wrap of PROXIES){ const testUrl=wrap(url); try{ const r=await withTimeout(fetch(testUrl,{cache:'no-store'}),7000,testUrl); if(!r.ok) throw new Error('HTTP '+r.status); const txt=await withTimeout(r.text(),7000,'read '+testUrl); if(txt && txt.length>40){ say('Fetched via '+testUrl); return txt; } }catch(e){ last=e; say('Failed '+testUrl+' — '+e.message);} } throw last||new Error('All proxies failed for '+url); }
+async function get(url){ const r=await withTimeout(fetch(url,{cache:'no-store'}),8000,url); if(!r.ok) throw new Error('HTTP '+r.status); return withTimeout(r.text(),8000,'read '+url); }
+async function fetchHtmlSmart(url){
+  const ts = Date.now();
+  const candidates = [
+    url + (url.includes('?')?'&':'?') + '_ts='+ts,
+    'https://corsproxy.io/?' + encodeURIComponent(url + (url.includes('?')?'&':'?') + '_ts='+ts),
+    'https://thingproxy.freeboard.io/fetch/'+url,
+    'https://r.jina.ai/http://'+url.replace(/^https?:\/\//,'')
+  ];
+  let lastErr=null;
+  for(const u of candidates){
+    try{ const txt = await get(u); if(txt && txt.length>200){ say('TU fetched via '+u); return {via:u, html:txt}; } }catch(e){ lastErr=e; say('TU source failed '+u+' — '+e.message); }
+  }
+  throw lastErr||new Error('No TU fetchers succeeded');
+}
 
+/* sources */
 const SRC={ airports:[ 'https://ourairports.com/data/airports.csv', 'https://raw.githubusercontent.com/davidmegginson/ourairports-data/master/airports.csv' ],
             runways:[ 'https://ourairports.com/data/runways.csv', 'https://raw.githubusercontent.com/davidmegginson/ourairports-data/master/runways.csv' ],
-            euro_main:'https://www.public.nm.eurocontrol.int/PUBPORTAL/gateway/spec/index.html',
             euro_detached:'https://www.public.nm.eurocontrol.int/PUBPORTAL/gateway/spec/PORTAL.27.2.0.2.38/detachedViews/headline_news.html?viewId=DISPLAY_ITEM_DV&parameter_set_id=0',
             metar_one:(id)=>`https://aviationweather.gov/api/data/metar?ids=${id}&format=raw`,
             taf_one:(id)=>`https://aviationweather.gov/api/data/taf?ids=${id}&format=raw`,
@@ -152,206 +160,55 @@ const SRC={ airports:[ 'https://ourairports.com/data/airports.csv', 'https://raw
             notam_raw1:(icao)=>`https://notams.aim.faa.gov/notamSearch/search?reportType=Raw&formatType=International&designators=${icao}`,
             notam_raw2:(icao)=>`https://www.notams.faa.gov/dinsQueryWeb/queryRetrievalMapAction.do?retrieveLocId=${icao}&actionType=notamRetrievalByICAOs&reportType=RawIntl` };
 const ECAC=new Set(["AL","AM","AT","AZ","BA","BE","BG","CH","CY","CZ","DE","DK","EE","ES","FI","FR","GE","GR","HR","HU","IE","IS","IT","LI","LT","LU","LV","MC","MD","ME","MK","MT","NL","NO","PL","PT","RO","RS","SE","SI","SK","SM","TR","UA","UK"]);
-const state={ airportsByIcao:new Map(), runwaysByIcao:new Map(), metarByIcao:new Map(), tafByIcao:new Map(), snowtamByIcao:new Map(), tacticalByIcao:new Map(), selectedICAO:null, autoTimer:null, autoTUTimer:null, autoTUNext:0, lastTUMap:new Map(), notify:false, _lastTUItems:null, tuSource:'none', showRunways:false };
+const state={ airportsByIcao:new Map(), runwaysByIcao:new Map(), selectedICAO:null, autoTUTimer:null, autoTUNext:0, showRunways:false, tacticalByIcao:new Map(), _lastTUItems:null };
 
-/* helpers */
+/* csv + markers */
 function parseCSV(line){ const out=[]; let cur='',q=false; for(let i=0;i<line.length;i++){ const c=line[i]; if(c==='"'){ q=!q; continue; } if(c===','&&!q){ out.push(cur); cur=''; continue; } cur+=c; } out.push(cur); return out; }
 function addAirport(icao,name,lat,lon,country){ const marker = L.circleMarker([lat,lon], {radius:5, color:'#596275', weight:3, fillColor:'#9aa0a6', fillOpacity:1}); marker.addTo(airportLayer).on('click', ()=> onAirportClick(icao)); state.airportsByIcao.set(icao, {icao,name,lat,lon,country, marker}); }
-function snowFill(cat){ if(cat==='RED') return '#ff4d4d'; if(cat==='ORANGE') return '#ff8c42'; if(cat==='YELLOW') return '#f5c744'; return '#9aa0a6'; }
-function catStroke(cat){ switch(cat){ case 'WEATHER': return '#60a5fa'; case 'RUNWAY_STATUS': return '#a78bfa'; case 'ATC_CAPACITY': return '#f59e0b'; case 'ATC_STAFFING': return '#f472b6'; case 'AIRSPACE': return '#22d3ee'; case 'EQUIPMENT': return '#818cf8'; case 'INDUSTRIAL': return '#2dd4bf'; default: return '#a3e635'; } }
-function styleMarker(icao, snowCat, tuCat){ const a=state.airportsByIcao.get(icao); if(!a) return; a.marker.setStyle({ fillColor: snowFill(snowCat), color: tuCat?catStroke(tuCat):'#596275', weight: tuCat?4:3 }); }
+async function loadAirports(){ airportLayer.clearLayers(); state.airportsByIcao.clear(); lblCount.textContent='Airports: …'; for(const url of SRC.airports){ try{ const txt=await get(url); let added=0; for(const line of txt.split('\n').slice(1)){ if(!line.trim()) continue; const cols=parseCSV(line); const ident=cols[1]; const type=cols[2]; const name=cols[3]; const lat=parseFloat(cols[4]); const lon=parseFloat(cols[5]); const ctry=(cols[8]==='GB')?'UK':cols[8]; if(!ECAC.has(ctry)) continue; if(!['large_airport','medium_airport'].includes(type)) continue; if(!ident || ident.length!==4) continue; if(!isFinite(lat)||!isFinite(lon)) continue; addAirport(ident,name,lat,lon,ctry); added++; } lblCount.textContent='Airports: '+added; say('Airports loaded'); return; }catch(e){ say('Airport load failed — '+e.message);} } }
+async function loadRunways(){ try{ const csv = await get(SRC.runways[0]); const byIcao=new Map(); for(const line of csv.split('\n').slice(1)){ if(!line.trim()) continue; const c=parseCSV(line); const icao=c[2]; if(!icao||icao.length!==4) continue; const le_lat=parseFloat(c[10]), le_lon=parseFloat(c[11]); const he_lat=parseFloat(c[15]), he_lon=parseFloat(c[16]); if(!isFinite(le_lat)||!isFinite(le_lon)||!isFinite(he_lat)||!isFinite(he_lon)) continue; const width_ft=parseFloat(c[4]); const width_m=isFinite(width_ft)?Math.round(width_ft*0.3048):45; const entry={airport:icao,width_m,ends:[{lat:le_lat,lon:le_lon},{lat:he_lat,lon:he_lon}]}; if(!byIcao.has(icao)) byIcao.set(icao,[]); byIcao.get(icao).push(entry); } state.runwaysByIcao=byIcao; }catch(e){ say('Runways CSV could not be loaded.'); }}
 
-/* load airports/runways */
-async function loadAirports(){ airportLayer.clearLayers(); state.airportsByIcao.clear(); lblCount.textContent='Airports: …'; for(const url of SRC.airports){ try{ const csv=await fetchViaAll(url); let added=0; for(const line of csv.split('\n').slice(1)){ if(!line.trim()) continue; const cols=parseCSV(line); const ident=cols[1]; const type=cols[2]; const name=cols[3]; const lat=parseFloat(cols[4]); const lon=parseFloat(cols[5]); const ctry=(cols[8]==='GB')?'UK':cols[8]; if(!ECAC.has(ctry)) continue; if(!['large_airport','medium_airport'].includes(type)) continue; if(!ident || ident.length!==4) continue; if(!isFinite(lat)||!isFinite(lon)) continue; addAirport(ident,name,lat,lon,ctry); added++; } lblCount.textContent='Airports: '+added; say('Airports loaded from '+url); return; }catch(e){ say('Airport load failed from '+url+' — '+e.message);} } const majors=[["EGLL","London Heathrow",51.47,-0.4543,"UK"],["EDDF","Frankfurt",50.0379,8.5622,"DE"],["LFPG","Paris CDG",49.0097,2.5479,"FR"],["LHBP","Budapest",47.4369,19.2556,"HU"],["LOWW","Vienna",48.1103,16.5697,"AT"],["LIRF","Rome FCO",41.8003,12.2389,"IT"],["LEMD","Madrid",40.4936,-3.5668,"ES"],["EHAM","Amsterdam",52.3086,4.7639,"NL"]]; majors.forEach(([i,n,la,lo,c])=>addAirport(i,n,la,lo,c)); lblCount.textContent='Airports: '+majors.length+' (fallback)'; }
-
-async function loadRunways(){ try{ const csv = await fetchViaAll(SRC.runways[0]).catch(()=>fetchViaAll(SRC.runways[1])); const byIcao=new Map(); for(const line of csv.split('\n').slice(1)){ if(!line.trim()) continue; const c=parseCSV(line); const icao=c[2]; if(!icao||icao.length!==4) continue; const length_ft=parseFloat(c[3]), width_ft=parseFloat(c[4]); const le_ident=c[8], le_lat=parseFloat(c[10]), le_lon=parseFloat(c[11]); const he_ident=c[13], he_lat=parseFloat(c[15]), he_lon=parseFloat(c[16]); if(!isFinite(le_lat)||!isFinite(le_lon)||!isFinite(he_lat)||!isFinite(he_lon)) continue; const length_m=isFinite(length_ft)?Math.round(length_ft*0.3048):null; const width_m=isFinite(width_ft)?Math.round(width_ft*0.3048):45; const entry={airport:icao,ident:`${le_ident}/${he_ident}`,length_m,width_m,ends:[{ident:le_ident,lat:le_lat,lon:le_lon},{ident:he_ident,lat:he_lat,lon:he_lon}]}; if(!byIcao.has(icao)) byIcao.set(icao,[]); byIcao.get(icao).push(entry); } state.runwaysByIcao=byIcao; }catch(e){ say('Runways CSV could not be loaded.'); }}
-
-/* METAR/TAF/SNOWTAM */
-async function fetchMetarOne(icao){ try{ const t=await fetchViaAll(SRC.metar_one(icao)); const line=(t||'').split('\n').filter(Boolean)[0]; if(line){ state.metarByIcao.set(icao,line); const el=document.getElementById('m_'+icao); if(el) el.textContent=line; } }catch(e){} }
-async function fetchTafOne(icao){ try{ const t=await fetchViaAll(SRC.taf_one(icao)); const line=(t||'').split('\n').filter(Boolean)[0]; if(line){ state.tafByIcao.set(icao,line); const el=document.getElementById('t_'+icao); if(el) el.textContent=line; } }catch(e){} }
-function parseList3(s){ if(!s) return [null,null,null]; const p=s.split('/').map(x=>x.trim()).slice(0,3); while(p.length<3) p.push(null); return p; }
-function classifyFromCC(a){ if(a.some(x=>x===1||x===0))return 'RED'; if(a.some(x=>x===2||x===3))return 'ORANGE'; if(a.some(x=>x===4||x===5))return 'YELLOW'; return null; }
-function decodeSnowtam(raw){ const g=(tag)=>{const m=raw.match(new RegExp('\\b'+tag+'\\)\\s*([^\\n\\r]+)','i')); return m?m[1].trim():null;}; const A=g('A'),C=g('C'),D=g('D'),E=g('E'),F=g('F'),G=g('G'),H=g('H'),B=g('B'),N=g('N'),T=g('T'); const rwycc=parseList3(D).map(x=>x==null?null:parseInt(x,10)); const cat=classifyFromCC(rwycc); const lines=[]; if(A)lines.push('Aerodrome: '+A); if(B)lines.push('Time: '+B); if(C)lines.push('Runway(s): '+C); if(rwycc.some(v=>v!=null))lines.push('RWYCC: '+rwycc.join('/')); if(E)lines.push('Coverage %: '+E); if(F)lines.push('Depth (mm): '+F); if(G)lines.push('Condition: '+G); if(H)lines.push('Width (m): '+H); if(N)lines.push('Remarks: '+N); if(T)lines.push('Method: '+T); return {decoded:lines.join('\n'), category:cat, rwycc}; }
-async function fetchSnowtamFAA(icao){ for(const u of [SRC.notam_raw1(icao), SRC.notam_raw2(icao)]){ try{ const t=await fetchViaAll(u); const plain=t.replace(/<[^>]+>/g,'\n'); const block=plain.split(/\n\s*\n+/).find(b=>/SNOWTAM/i.test(b)&&b.toUpperCase().includes(icao)); if(block){ const d=decodeSnowtam(block.trim()); return { raw:block.trim(), decoded:d.decoded, category:d.category, rwycc:d.rwycc }; } }catch(e){} } return null; }
-
-/* Runway thirds */
-function drawRunwaysFor(icao){ runwayLayer.clearLayers(); if(!state.showRunways) return; if(map.getZoom()<10) return; const list=state.runwaysByIcao.get(icao); if(!list||!list.length) return; const rwycc=state.snowtamByIcao.get(icao)?.rwycc||null; function interp(a,b,t){return L.latLng(a.lat+(b.lat-a.lat)*t,a.lng+(b.lng-a.lng)*t);} function classForThird(i){ const c=Array.isArray(rwycc)?rwycc[i]:null; if(c==null) return 'rwy-green'; if(c<=1) return 'rwy-red'; if(c<=3) return 'rwy-orange'; if(c<=5) return 'rwy-yellow'; return 'rwy-green'; } for(const r of list){ const p1=L.latLng(r.ends[0].lat,r.ends[0].lon), p2=L.latLng(r.ends[1].lat,r.ends[1].lon); const a0=p1,a1=interp(p1,p2,1/3),a2=interp(p1,p2,2/3),a3=p2; const width=(r.width_m||45)/2, lat=(p1.lat+p2.lat)/2, m2degLat=1/111320, m2degLon=1/(111320*Math.cos(lat*Math.PI/180)); function quad(a,b){ const dx=(b.lng-a.lng), dy=(b.lat-a.lat), len=Math.hypot(dx,dy)||1e-9; const ux=-dy/len, uy=dx/len; const offLon=ux*width*m2degLon, offLat=uy*width*m2degLat; return [[a.lat-offLat,a.lng-offLon],[a.lat+offLat,a.lng+offLon],[b.lat+offLat,b.lng+offLon],[b.lat-offLat,b.lng-offLon]]; } [[a0,a1],[a1,a2],[a2,a3]].forEach((seg,i)=> L.polygon(quad(seg[0],seg[1]), { className:'runway-rect '+classForThird(i), stroke:false }).addTo(runwayLayer)); } }
+/* runways */
+function drawRunwaysFor(icao){ runwayLayer.clearLayers(); if(!state.showRunways) return; if(map.getZoom()<10) return; const list=state.runwaysByIcao.get(icao); if(!list||!list.length) return; function interp(a,b,t){return L.latLng(a.lat+(b.lat-a.lat)*t,a.lng+(b.lng-a.lng)*t);} for(const r of list){ const p1=L.latLng(r.ends[0].lat,r.ends[0].lon), p2=L.latLng(r.ends[1].lat,r.ends[1].lon); const a0=p1,a1=interp(p1,p2,1/3),a2=interp(p1,p2,2/3),a3=p2; const width=(r.width_m||45)/2, lat=(p1.lat+p2.lat)/2, m2degLat=1/111320, m2degLon=1/(111320*Math.cos(lat*Math.PI/180)); function quad(a,b){ const dx=(b.lng-a.lng), dy=(b.lat-a.lat), len=Math.hypot(dx,dy)||1e-9; const ux=-dy/len, uy=dx/len; const offLon=ux*width*m2degLon, offLat=uy*width*m2degLat; return [[a.lat-offLat,a.lng-offLon],[a.lat+offLat,a.lng+offLon],[b.lat+offLat,b.lng+offLon],[b.lat-offLat,b.lng-offLon]]; } [[a0,a1],[a1,a2],[a2,a3]].forEach((seg,i)=> L.polygon(quad(seg[0],seg[1]), { className:'runway-rect rwy-green', stroke:false }).addTo(runwayLayer)); } }
 map.on('zoomend', ()=>{ if(state.selectedICAO) drawRunwaysFor(state.selectedICAO); });
 
-/* Popup */
-function buildPopupHTML(icao){ const a=state.airportsByIcao.get(icao)||{}; const metar=state.metarByIcao.get(icao)||'Loading…'; const taf=state.tafByIcao.get(icao)||'Loading…'; const snow=state.snowtamByIcao.get(icao); const tu=state.tacticalByIcao.get(icao); const cat = snow?.category ? (snow.category==='RED'?'RED':snow.category==='ORANGE'?'ORANGE':'YELLOW') : ''; const badge = tu?(`<span class="badge ${tu.badgeCls}">${tu.catLabel}</span>` + (tu.sub?`<span class="sub">${tu.sub}</span>`:'')) : ''; return `<div class="popup"><h3>${icao} — ${a.name||''} ${cat?`<span style="padding:2px 6px;border-radius:999px;background:${cat==='RED'?'#ffe5e5':cat==='ORANGE'?'#fff0e0':'#fff7dd'};border:1px solid #ccc; margin-right:6px;">SNOWTAM: ${cat}</span>`:''}${badge}</h3><div><strong>METAR</strong></div><pre id="m_${icao}">${metar}</pre><div><strong>TAF</strong></div><pre id="t_${icao}">${taf}</pre><div style="display:flex;gap:6px;margin:6px 0;"><button class="btn" onclick="window.__refetch('${icao}','metar',this)">Re-fetch METAR</button><button class="btn" onclick="window.__refetch('${icao}','taf',this)">Re-fetch TAF</button><button class="btn" onclick="window.__refetch('${icao}','snow',this)">Re-fetch SNOWTAM</button><span style="opacity:.7;font-size:12px;align-self:center;">Zoom ≥ 10 for runway thirds.</span></div>${tu?`<div><strong>Tactical Update</strong></div><pre>`+tu.text+`</pre>`:'<div><strong>Tactical Update</strong></div><pre>—</pre>'}</div>`; }
-function rebuildPopup(icao){ const a=state.airportsByIcao.get(icao); if(!a) return; L.popup({maxWidth:720,autoPan:true}).setLatLng([a.lat,a.lon]).setContent(buildPopupHTML(icao)).openOn(map); }
-async function onAirportClick(icao){ state.selectedICAO=icao; const a=state.airportsByIcao.get(icao); if(!a) return; if(map.getZoom()<11) map.setView([a.lat,a.lon],11); else map.panTo([a.lat,a.lon]); rebuildPopup(icao); drawRunwaysFor(icao); fetchMetarOne(icao); fetchTafOne(icao); const snow=await fetchSnowtamFAA(icao); if(snow){ state.snowtamByIcao.set(icao,snow); styleMarker(icao,snow.category, state.tacticalByIcao.get(icao)?.cat); drawRunwaysFor(icao); rebuildPopup(icao); } }
-window.__refetch = async (icao,what,btn)=>{ if(btn){ btn.disabled=true; btn.dataset.prev=btn.textContent; btn.textContent='Fetching…'; } if(what==='metar') await fetchMetarOne(icao); else if(what==='taf') await fetchTafOne(icao); else { const s=await fetchSnowtamFAA(icao); if(s){ state.snowtamByIcao.set(icao,s); styleMarker(icao,s.category, state.tacticalByIcao.get(icao)?.cat); drawRunwaysFor(icao); rebuildPopup(icao);} } if(btn){ btn.textContent=btn.dataset.prev; btn.disabled=false; } };
+/* TU parsing */
+const CAT = { WEATHER:{label:'Weather', badge:'badge-blue'}, RUNWAY_STATUS:{label:'Runway/Closure',badge:'badge-purple'}, ATC_CAPACITY:{label:'ATC Capacity',badge:'badge-amber'}, ATC_STAFFING:{label:'ATC Staffing',badge:'badge-pink'}, AIRSPACE:{label:'Airspace/Restrictions',badge:'badge-cyan'}, EQUIPMENT:{label:'Equipment/Tech',badge:'badge-indigo'}, INDUSTRIAL:{label:'Industrial Action',badge:'badge-teal'}, OTHER:{label:'Other',badge:'badge-lime'} };
+function cleanHtmlToText(html){ return html.replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/<br\s*\/?>(?=\s*\n)/gi,'\n').replace(/<script[\s\S]*?<\/script>/gi,'').replace(/<style[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,'\n'); }
+function isolateTacticalBlock(textish){ const idx = textish.search(/Tactical\s+Update/i); if(idx<0) return textish; const slice = textish.slice(idx); const stop = slice.search(/^(?:\s*Current Network|\s*Ongoing News|\s*Latest News)/im); return stop>0 ? slice.slice(0,stop) : slice; }
+function detectWeatherSub(s){ return (/CB\b|\bTS\b|TSRA|VCTS|LTG|thunder/i.test(s)?'Thunderstorms/CB': /low\s+(?:vis|visibility)|\bLVP\b|\bFG\b|\bBR\b|RVR/i.test(s)?'Low Visibility': /gust|LLWS|wind shear|Strong wind/i.test(s)?'Strong Wind/LLWS': /snow|ice|freez|FZRA|FZDZ|FZFG|slush|RWYCC|de-ice/i.test(s)?'Snow/Ice': /heavy rain|\+RA|torrential|SHRA/i.test(s)?'Heavy Rain':null); }
+function scoreFor(text){ const S=text; const has=(rx)=>rx.test(S); const cap=has(/\bATC\b\s*capacity/i); const stf=has(/staff|controller(?:s)? shortage|reduced manning/i); const rwy=has(/\brwy\b|runway|taxiway|WIP|closure|closed|braking|contaminated|snowbank/i); const wx=has(/\bweather\b|\bwx\b|fog|hail|storm|CB\b|\bTS\b/i); const air=has(/airspace|restriction|TSA|TRA|danger area|military/i); const eqp=has(/ILS|VOR|NDB|radar|comms?|power outage|system (?:down|failure)|technical|outage/i); const ind=has(/industrial|strike|union/i); if(cap) return {cat:'ATC_CAPACITY', sub:detectWeatherSub(S)}; if(stf) return {cat:'ATC_STAFFING'}; if(rwy) return {cat:'RUNWAY_STATUS'}; if(wx) return {cat:'WEATHER', sub:detectWeatherSub(S)}; if(eqp) return {cat:'EQUIPMENT'}; if(air) return {cat:'AIRSPACE'}; if(ind) return {cat:'INDUSTRIAL'}; return {cat:'OTHER'}; }
+function extractTactical(html){ const textish=cleanHtmlToText(html); const block=isolateTacticalBlock(textish); const lines=block.split(/\r?\n/).map(s=>s.trim()).filter(Boolean); let currentICAOs=[]; const per=new Map(); for(const line of lines){ const icaos=(line.toUpperCase().match(/\b[A-Z]{4}\b/g)||[]); if(icaos.length){ currentICAOs=Array.from(new Set(icaos)); currentICAOs.forEach(c=>{ if(!per.has(c)) per.set(c,{icao:c,texts:new Set(),best:{cat:'OTHER',sub:null}}); per.get(c).texts.add(line); }); continue; } if(!currentICAOs.length) continue; const sc=scoreFor(line); for(const c of currentICAOs){ const rec=per.get(c); rec.texts.add(line); if(rec.best.cat==='OTHER' || sc.cat==='ATC_CAPACITY' || (sc.cat!=='OTHER' && rec.best.cat==='WEATHER' && sc.cat!=='WEATHER')) rec.best=sc; } } const items=Array.from(per.values()).map(v=>({icao:v.icao,text:Array.from(v.texts).join('\n'),cat:v.best.cat,catLabel:CAT[v.best.cat].label,badgeCls:CAT[v.best.cat].badge,sub:v.best.sub||null})); const time=(textish.match(/\b\d{2}:\d{2}\b/)||[])[0]||''; return {items,time,raw:block}; }
 
-/* Tactical classification (strict) */
-const CAT = {
-  WEATHER: { label:'Weather', badge:'badge-blue', stroke:'#60a5fa',
-    sub: [
-      { label:'Thunderstorms/CB', keys:[/\bCB\b|\bTS\b|TSRA|VCTS|LTG|thunder/i], score:3 },
-      { label:'Low Visibility',    keys:[/\blow\s+(?:vis|visibility)\b|\bLVP\b|\bFG\b|\bBR\b|mist|poor visibility|\bRVR\b|CAT\s*(?:I|II|III)\b/i], score:3 },
-      { label:'Strong Wind/LLWS',  keys:[/strong winds?|gust(?:ing)?\s*\d+|\bLLWS\b|wind shear|crosswind|tailwind/i], score:2 },
-      { label:'Snow/Ice',          keys:[/\bsnow\b|ice|icing|freezing|FZRA|FZDZ|FZFG|slush|RWYCC|de-ice|deicing/i], score:3 },
-      { label:'Heavy Rain',        keys:[/heavy rain|torrential|intense rain|\+RA|SHRA/i], score:2 }
-    ],
-    keys:[/\bweather\b|\bwx\b|fog|hail|storm/i], score:1 },
-  RUNWAY_STATUS: { label:'Runway/Closure', badge:'badge-purple', stroke:'#a78bfa', keys:[/\brwy\b|runway|taxiway|\bWIP\b|work in progress|closure|closed|braking|\bBA\b|contaminated|snowbank|not available|sweeping|plough|de-ice ops/i], score:2 },
-  ATC_CAPACITY:  { label:'ATC Capacity',  badge:'badge-amber', stroke:'#f59e0b', keys:[/\bATC\b\s*capacity/i], score:6 },
-  ATC_STAFFING:  { label:'ATC Staffing',  badge:'badge-pink',  stroke:'#f472b6', keys:[/staff|staffing|controller(?:s)? shortage|controller availability|rostering|reduced manning/i], score:3 },
-  AIRSPACE:      { label:'Airspace/Restrictions', badge:'badge-cyan', stroke:'#22d3ee', keys:[/airspace|restriction|segregated|\bTSA\b|\bTRA\b|danger area|military|activity|area active|activation/i], score:2 },
-  EQUIPMENT:     { label:'Equipment/Tech', badge:'badge-indigo', stroke:'#818cf8', keys:[/\bILS\b|\bVOR\b|\bNDB\b|radar|comms?|power outage|system (?:down|failure)|degraded|technical|outage|atc sys/i], score:2 },
-  INDUSTRIAL:    { label:'Industrial Action', badge:'badge-teal', stroke:'#2dd4bf', keys:[/industrial|strike|union|action/i], score:3 },
-  OTHER:         { label:'Other', badge:'badge-lime', stroke:'#a3e635', keys:[], score:0 }
-};
-const NEGATIVE=[/no (?:significant )?impact/i,/improv(?:e|ing)/i,/lifted/i,/cancelled/i,/resumed? normal/i,/stand ?down/i,/ended/i,/concluded/i,/\bNIL\b/i];
-
-function detectWeatherSub(text){ for(const sc of CAT.WEATHER.sub){ if(sc.keys.some(rx=>rx.test(text))) return sc.label; } return null; }
-function scoreFor(text){
-  let best={cat:'OTHER',score:-1, sub:null};
-  for(const [k,v] of Object.entries(CAT)){
-    let s=0, sub=null;
-    if(v.keys.some(rx=>rx.test(text))) s+=v.score;
-    if(k==='WEATHER'){
-      for(const sc of v.sub){ if(sc.keys.some(rx=>rx.test(text))){ s+=sc.score; if(!sub) sub=sc.label; } }
-    }
-    if(s>best.score) best={cat:k,score:s, sub};
-  }
-  if(NEGATIVE.some(rx=>rx.test(text))) return {cat:'OTHER', sub:best.sub};
-  return {cat:best.cat, sub:best.sub};
-}
-function isCapacityLine(line){
-  return /\bATC\b\s*capacity/i.test(line); // explicit only
-}
-
-/* Sticky-ICAO extractor */
-function cleanText(html){ return html.replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/<br\s*\/?>(?=\s*\n)/gi,'\n').replace(/<[^>]+>/g,'\n'); }
-function extractTactical(html){
-  const txt = cleanText(html);
-  const lines = txt.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
-  const perIcao = new Map();
-  let timeLine = (txt.match(/\b\d{1,2}\s\w+\s\d{4}\b.*?\b\d{2}:\d{2}\b/i) || txt.match(/\b\d{2}:\d{2}\b/))?.[0] || '';
-  let currentICAOs=[];
-  for(const line of lines){
-    const icaos = (line.toUpperCase().match(/\b[A-Z]{4}\b/g)||[]);
-    if(icaos.length){
-      currentICAOs = Array.from(new Set(icaos));
-      currentICAOs.forEach(code=>{
-        if(!perIcao.has(code)) perIcao.set(code, { icao:code, texts:new Set(), best:{cat:'OTHER',sub:null,score:-1}, forceCapacity:false, causeSub:null });
-        perIcao.get(code).texts.add(line);
-      });
-      continue;
-    }
-    if(!currentICAOs.length) continue;
-    const cap = isCapacityLine(line);
-    const wxSub = detectWeatherSub(line);
-    const sc = scoreFor(line);
-    for(const code of currentICAOs){
-      const rec = perIcao.get(code);
-      rec.texts.add(line);
-      const sVal = CAT[sc.cat]? CAT[sc.cat].score : 0;
-      const newScore = sVal + (sc.sub?1:0);
-      if(newScore > rec.best.score){ rec.best = {cat: sc.cat, sub: sc.sub, score:newScore}; }
-      if(cap){ rec.forceCapacity=true; if(wxSub && !rec.causeSub) rec.causeSub=wxSub; }
-    }
-  }
-  const items = Array.from(perIcao.values()).map(v=>{
-    const finalCat = v.forceCapacity ? 'ATC_CAPACITY' : (v.best.cat||'OTHER');
-    const sub = v.forceCapacity ? (v.causeSub||v.best.sub) : v.best.sub;
-    return { icao:v.icao, text: Array.from(v.texts).join('\n'), cat: finalCat, catLabel: CAT[finalCat].label, badgeCls: CAT[finalCat].badge, sub };
-  });
-  return { items, time: timeLine };
-}
-
-/* Filters/UI/refresh */
 function applyFilters(items){ const boxen = Array.from(document.querySelectorAll('.filters input[type=checkbox]')); const enabled = new Set(boxen.filter(b=>b.checked).map(b=>b.dataset.cat)); return items.filter(it=> enabled.has(it.cat)); }
-function notifyDesktop(msg){ if(!state.notify) return; if(Notification.permission==='granted'){ new Notification('Tactical Update', { body: msg }); } }
-function updateTacticalUI(items, time, notifyChanges=false){
-  const list=document.getElementById('tu-list'); const tdiv=document.getElementById('tu-time');
-  if(!items || !items.length){ say('updateTacticalUI called with empty items — keeping previous.'); return; }
-  list.innerHTML=''; tdiv.textContent=time?('Time: '+time):'—';
-  const filtered = applyFilters(items);
-  const prev = new Map(state.lastTUMap);
-  state.lastTUMap.clear();
-  const seen=new Set();
-  filtered.forEach(item=>{
-    state.lastTUMap.set(item.icao, item.cat + (item.sub?('|'+item.sub):''));
-    const a=state.airportsByIcao.get(item.icao); if(!a) return;
-    state.tacticalByIcao.set(item.icao, { text:item.text, cat:item.cat, catLabel:item.catLabel, badgeCls:item.badgeCls, sub:item.sub });
-    styleMarker(item.icao, state.snowtamByIcao.get(item.icao)?.category, item.cat);
-    if(!seen.has(item.icao)){
-      const d=document.createElement('div'); d.className='card';
-      d.innerHTML=`<div class="hdr"><span class="icao">${item.icao}</span><span class="badge ${item.badgeCls}">${item.catLabel}</span>${item.sub?`<span class="sub">${item.sub}</span>`:''}<button class="btn" data-icao="${item.icao}">Zoom</button></div><div style="font-size:12px;white-space:pre-wrap;opacity:.95;">${item.text}</div>`;
-      d.querySelector('button').addEventListener('click', ()=>{ const a=state.airportsByIcao.get(item.icao); if(a){ map.setView([a.lat,a.lon],10); rebuildPopup(item.icao); } });
-      list.appendChild(d); seen.add(item.icao);
-    }
-  });
-  if(notifyChanges){
-    const curr=state.lastTUMap;
-    for(const [icao,cat] of curr){ if(!prev.has(icao)) { const m=`NEW TU: ${icao} (${cat})`; toast(m); notifyDesktop(m);} else if(prev.get(icao)!==cat){ const m=`UPDATED TU: ${icao} (${prev.get(icao)} → ${cat})`; toast(m); notifyDesktop(m);} }
-    for(const [icao,cat] of prev){ if(!curr.has(icao)){ const m=`CLEARED TU: ${icao}`; toast(m); notifyDesktop(m); styleMarker(icao, state.snowtamByIcao.get(icao)?.category, null); state.tacticalByIcao.delete(icao); } }
-  } else { toast('Tactical Update: ' + filtered.length + ' matching entries'); }
-}
+function updateTacticalUI(items, time){ const list=document.getElementById('tu-list'); const tdiv=document.getElementById('tu-time'); if(!items||!items.length){ toast('No TU items parsed.'); return; } list.innerHTML=''; tdiv.textContent=time?('Time: '+time):'—'; const filtered=applyFilters(items); const seen=new Set(); filtered.forEach(item=>{ const a=state.airportsByIcao.get(item.icao); if(!a) return; state.tacticalByIcao.set(item.icao,item); a.marker.setStyle({color:'#f59e0b',weight:4}); if(!seen.has(item.icao)){ const d=document.createElement('div'); d.className='card'; d.innerHTML=`<div class="hdr"><span class="icao">${item.icao}</span><span class="badge ${item.badgeCls}">${item.catLabel}</span>${item.sub?`<span class="sub">${item.sub}</span>`:''}<button class="btn" data-icao="${item.icao}">Zoom</button></div><div style="font-size:12px;white-space:pre-wrap;opacity:.95;">${item.text}</div>`; d.querySelector('button').addEventListener('click', ()=>{ const a=state.airportsByIcao.get(item.icao); if(a){ map.setView([a.lat,a.lon],10); rebuildPopup(item.icao); } }); list.appendChild(d); seen.add(item.icao);} }); toast('Tactical Update: '+filtered.length+' entries.'); }
 
-/* TU fetch + timers */
-async function fetchEuroTactical(notifyChanges=false, force=false){
-  if(state.tuSource==='paste' && !force){ say('Auto TU skipped (PASTE mode)'); return; }
-  const urls=[SRC.euro_detached, SRC.euro_main];
-  for(const u of urls){
-    try{ const html = await fetchViaAll(u); const {items, time} = extractTactical(html); if(items && items.length){ state._lastTUItems=items; state.tuSource='net'; updateTacticalUI(items, time, notifyChanges); return; } }catch(e){ say('Eurocontrol fetch failed ('+u+'): '+e.message); }
-  }
-  toast('Eurocontrol TU: no data. Keeping previous view.');
-}
-document.getElementById('btn-euro').addEventListener('click', ()=>fetchEuroTactical(true, true));
-document.querySelectorAll('.filters input').forEach(cb=> cb.addEventListener('change', ()=>{ if(state._lastTUItems) updateTacticalUI(state._lastTUItems, document.getElementById('tu-time').textContent.replace(/^Time:\s*/,'')); }));
-function scheduleTactical(autoOn){ clearInterval(state.autoTUTimer); state.autoTUTimer=null; if(!autoOn){ tuNext.textContent='—'; return; } const intervalMs=10*60*1000; const tick=()=>{ fetchEuroTactical(true); state.autoTUNext=Date.now()+intervalMs; }; tick(); state.autoTUTimer=setInterval(tick, intervalMs); }
-document.getElementById('btn-autoTU').addEventListener('click', (e)=>{ const on=e.currentTarget.dataset.on==='1'; if(on){ e.currentTarget.dataset.on='0'; e.currentTarget.textContent='Auto TU: OFF'; scheduleTactical(false); } else { e.currentTarget.dataset.on='1'; e.currentTarget.textContent='Auto TU: ON'; scheduleTactical(true); } });
-setInterval(()=>{ if(state.autoTUNext>0){ const s=Math.max(0, Math.floor((state.autoTUNext-Date.now())/1000)); tuNext.textContent='Next TU in '+String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); } }, 1000);
-document.getElementById('btn-notif').addEventListener('click', async ()=>{ if('Notification' in window){ if(Notification.permission==='granted'){ state.notify=true; toast('Desktop notifications ON'); } else if(Notification.permission!=='denied'){ const p=await Notification.requestPermission(); state.notify=(p==='granted'); toast('Desktop notifications '+(state.notify?'ON':'blocked')); } else toast('Notifications blocked'); } else toast('Notifications not supported'); });
+async function fetchEuroTacticalAuto(){ try{ const {via,html}=await fetchHtmlSmart(SRC.euro_detached); const parsed=extractTactical(html); if(parsed.items.length){ state._lastTUItems=parsed.items; updateTacticalUI(parsed.items, parsed.time); say('TU parsed from '+via+' — items: '+parsed.items.length); return true; } }catch(e){ say('Auto TU failed: '+e.message); } return false; }
 
-/* Paste TU modal controls */
-const modal=document.getElementById('pasteModal');
-const txtArea=document.getElementById('tuInput');
+/* popup */
+function buildPopupHTML(icao){ const a=state.airportsByIcao.get(icao)||{}; const tu=state.tacticalByIcao.get(icao); return `<div class="popup"><h3>${icao} — ${a.name||''} ${tu?(`<span class="badge ${tu.badgeCls}">${tu.catLabel}</span>` + (tu.sub?`<span class="sub">${tu.sub}</span>`:'')) : ''}</h3></div>`; }
+function rebuildPopup(icao){ const a=state.airportsByIcao.get(icao); if(!a) return; L.popup({maxWidth:720,autoPan:true}).setLatLng([a.lat,a.lon]).setContent(buildPopupHTML(icao)).openOn(map); }
+async function onAirportClick(icao){ state.selectedICAO=icao; const a=state.airportsByIcao.get(icao); if(!a) return; if(map.getZoom()<11) map.setView([a.lat,a.lon],11); else map.panTo([a.lat,a.lon]); rebuildPopup(icao); drawRunwaysFor(icao); }
+
+/* Paste TU modal */
+const modal=document.getElementById('pasteModal'); const txtArea=document.getElementById('tuInput');
 function openPaste(){ modal.classList.add('show'); txtArea.value=''; txtArea.focus(); }
 function closePaste(){ modal.classList.remove('show'); }
 document.getElementById('btn-paste').addEventListener('click', openPaste);
 document.getElementById('pasteClose').addEventListener('click', closePaste);
 document.getElementById('pasteCancel').addEventListener('click', closePaste);
-document.getElementById('pasteParse').addEventListener('click', ()=>{
-  const raw=txtArea.value||'';
-  const {items, time} = extractTactical(raw);
-  if(items && items.length){
-    state._lastTUItems = items;
-    state.tuSource='paste'; // lock
-    updateTacticalUI(items, time, true);
-    toast('Tactical Update set from PASTE.');
-    closePaste();
-  } else {
-    toast('Could not parse any ICAOs from pasted text.');
-  }
-});
+document.getElementById('pasteParse').addEventListener('click', ()=>{ const raw=txtArea.value||''; const parsed=extractTactical(raw); if(parsed.items.length){ state._lastTUItems=parsed.items; updateTacticalUI(parsed.items, parsed.time); toast('TU set from PASTE.'); closePaste(); } else toast('No ICAOs found in pasted text.'); });
 
-/* Toggle runways */
+/* controls */
+document.getElementById('btn-autoTU').addEventListener('click', (e)=>{ const on=e.currentTarget.dataset.on==='1'; if(on){ e.currentTarget.dataset.on='0'; e.currentTarget.textContent='Auto TU: OFF'; clearInterval(state.autoTUTimer);} else { e.currentTarget.dataset.on='1'; e.currentTarget.textContent='Auto TU: ON'; scheduleTU(); } });
+document.getElementById('btn-euro').addEventListener('click', ()=>fetchEuroTacticalAuto().then(ok=>toast(ok?'Pulled TU from NM.':'Failed to pull TU.')));
 document.getElementById('cb-runways').addEventListener('change', (e)=>{ state.showRunways=e.currentTarget.checked; runwayLayer.clearLayers(); if(state.showRunways && state.selectedICAO) drawRunwaysFor(state.selectedICAO); });
 
-/* Refresh & boot */
-async function refreshAll(btn){ try{ if(btn){btn.disabled=true;btn.dataset.prev=btn.textContent;btn.textContent='Refreshing…';}
-  const icaos=Array.from(state.airportsByIcao.keys()); const chunk=120;
-  for(let i=0;i<icaos.length;i+=chunk){
-    const part=icaos.slice(i,i+chunk);
-    try{ const t=await fetchViaAll(SRC.metar(part.join(','))); t.split('\n').forEach(s=>{s=s.trim(); if(s){ state.metarByIcao.set(s.slice(0,4).toUpperCase(), s);} }); }catch(e){}
-    try{ const t=await fetchViaAll(SRC.taf(part.join(','))); t.split('\n').forEach(s=>{s=s.trim(); if(s){ state.tafByIcao.set(s.slice(0,4).toUpperCase(), s);} }); }catch(e){}
-  } } finally { if(btn){btn.textContent=btn.dataset.prev;btn.disabled=false;} if(state.selectedICAO) rebuildPopup(state.selectedICAO); } }
-document.getElementById('btn-refresh').addEventListener('click', (e)=> refreshAll(e.currentTarget));
-document.getElementById('btn-auto').addEventListener('click', (e)=>{ const on=e.currentTarget.dataset.on==='1'; if(on){ clearInterval(state.autoTimer); state.autoTimer=null; e.currentTarget.dataset.on='0'; e.currentTarget.textContent='Auto 15m: OFF'; } else { state.autoTimer=setInterval(()=>refreshAll(), 15*60*1000); e.currentTarget.dataset.on='1'; e.currentTarget.textContent='Auto 15m: ON'; } });
-document.getElementById('btn-reload').addEventListener('click', ()=> loadAirports());
+function scheduleTU(){ clearInterval(state.autoTUTimer); const intervalMs=10*60*1000; const tick=()=>{ fetchEuroTacticalAuto(); state.autoTUNext=Date.now()+intervalMs; }; tick(); state.autoTUTimer=setInterval(tick, intervalMs); }
+setInterval(()=>{ if(state.autoTUNext>0){ const s=Math.max(0, Math.floor((state.autoTUNext-Date.now())/1000)); tuNext.textContent='Next TU in '+String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); } }, 1000);
 
-(async function boot(){
-  await loadAirports();
-  await loadRunways();
-  await refreshAll();
-  state.autoTimer=setInterval(()=>refreshAll(), 15*60*1000);
-  say('Ready. v18.9: Paste TU modal (reliable) + runway overlay fixed + strict capacity classification.');
-})();
+/* boot */
+(async function boot(){ await loadAirports(); await loadRunways(); scheduleTU(); say('Ready. v19.0 rebuild.'); })();
 </script>
 </body>
 </html>
