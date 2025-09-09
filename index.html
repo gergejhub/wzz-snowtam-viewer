@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>ECAC Airports — METAR/TAF + SNOWTAM + Eurocontrol Tactical — v18.2</title>
+<title>ECAC Airports — METAR/TAF + SNOWTAM + Eurocontrol Tactical — v18.3</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
   html, body {
@@ -17,7 +17,7 @@
   }
   .app {
     display:grid;
-    grid-template-columns: 1fr 380px;
+    grid-template-columns: 1fr 400px;
     grid-template-rows:56px calc(100vh - 56px);
     grid-template-areas: "topbar topbar" "map panel";
     height:100vh;
@@ -34,10 +34,11 @@
     width: 100% !important;
     min-height:100%;
   }
-  .legend { position:absolute; right:400px; bottom:12px; background:#14161a; border:1px solid #2a2f39; padding:10px 12px; border-radius:8px; font-size:12px; z-index:500; }
+  .legend { position:absolute; right:420px; bottom:12px; background:#14161a; border:1px solid #2a2f39; padding:10px 12px; border-radius:8px; font-size:12px; z-index:500; }
   .dot { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px; vertical-align:middle; }
   .dot.grey{ background:#9aa0a6; } .dot.yellow{ background:#f5c744; } .dot.orange{ background:#ff8c42; } .dot.red{ background:#ff4d4d; }
   .dot.blue{ background:#60a5fa; } .dot.amber{ background:#f59e0b; } .dot.pink{ background:#f472b6; } .dot.teal{ background:#2dd4bf; } .dot.lime{ background:#a3e635; }
+  .dot.purple{ background:#a78bfa; } .dot.indigo{ background:#818cf8; } .dot.cyan{ background:#22d3ee; }
   .panel { grid-area: panel; border-left:1px solid #23262d; background:#121417; display:flex; flex-direction:column; min-width: 340px; overflow:auto; }
   .panel h2 { font-size:14px; margin:10px 12px 6px; }
   .panel .filters { display:flex; flex-wrap: wrap; gap:6px 8px; padding:0 10px 8px; }
@@ -45,7 +46,7 @@
   .chip input{ margin:0 }
   .list { overflow:auto; padding:0 8px 12px; }
   .card { border:1px solid #2a2f39; border-radius:8px; padding:8px; margin:8px; background:#171a1f; }
-  .card .hdr { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:4px; }
+  .card .hdr { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:4px; flex-wrap: wrap; }
   .card .icao { font-weight:700; letter-spacing:.3px; }
   .badge { font-size:11px; padding:2px 6px; border-radius:999px; border:1px solid #2a2f39; background:#0f1115; }
   .badge-blue{ border-color:#93c5fd; background:#dbeafe; color:#1e3a8a }
@@ -53,6 +54,9 @@
   .badge-pink{ border-color:#fbcfe8; background:#fce7f3; color:#831843 }
   .badge-teal{ border-color:#99f6e4; background:#ccfbf1; color:#115e59 }
   .badge-lime{ border-color:#d9f99d; background:#ecfccb; color:#3f6212 }
+  .badge-purple{ border-color:#c4b5fd; background:#ede9fe; color:#5b21b6 }
+  .badge-indigo{ border-color:#c7d2fe; background:#e0e7ff; color:#3730a3 }
+  .badge-cyan{ border-color:#a5f3fc; background:#cffafe; color:#155e75 }
   .sub { font-size:10px; opacity:.9; margin-left:6px; padding:2px 6px; border-radius:999px; border:1px dashed #93c5fd; background:#e6f0ff; color:#1e3a8a }
   .toast { position: fixed; right: 14px; top: 14px; display:flex; flex-direction:column; gap:8px; z-index: 3000; }
   .toast .t { background:#14161a; border:1px solid #2a2f39; color:#e9eef3; padding:8px 10px; border-radius:8px; font-size:13px; box-shadow: 0 6px 18px rgba(0,0,0,.3); }
@@ -68,7 +72,7 @@
 <body>
 <div class="app">
   <div class="topbar">
-    <h1>ECAC Airports — v18.2</h1>
+    <h1>ECAC Airports — v18.3</h1>
     <span id="lbl-count" style="opacity:.8;font-size:12px;">Airports: —</span>
     <div class="spacer"></div>
     <button id="btn-euro" class="btn">Fetch Tactical Update</button>
@@ -86,8 +90,11 @@
     <div id="tu-time" style="opacity:.8;font-size:12px;margin:0 12px 6px;">—</div>
     <div class="filters">
       <label class="chip"><input type="checkbox" data-cat="WEATHER" checked><span class="dot blue"></span>Weather <span class="sub">TS/CB, Low Vis, Strong Wind, Snow/Ice, Heavy Rain</span></label>
+      <label class="chip"><input type="checkbox" data-cat="RUNWAY_STATUS" checked><span class="dot purple"></span>Runway/Closure</label>
       <label class="chip"><input type="checkbox" data-cat="ATC_CAPACITY" checked><span class="dot amber"></span>ATC Capacity</label>
       <label class="chip"><input type="checkbox" data-cat="ATC_STAFFING" checked><span class="dot pink"></span>ATC Staffing</label>
+      <label class="chip"><input type="checkbox" data-cat="AIRSPACE" checked><span class="dot cyan"></span>Airspace/Restrictions</label>
+      <label class="chip"><input type="checkbox" data-cat="EQUIPMENT" checked><span class="dot indigo"></span>Equipment/Tech</label>
       <label class="chip"><input type="checkbox" data-cat="INDUSTRIAL" checked><span class="dot teal"></span>Industrial Action</label>
       <label class="chip"><input type="checkbox" data-cat="OTHER" checked><span class="dot lime"></span>Other</label>
     </div>
@@ -100,8 +107,11 @@
     <div><span class="dot red"></span>SNOWTAM: RED</div>
     <div style="margin-top:6px;">Marker stroke colors (Tactical Update):</div>
     <div><span class="dot blue"></span>Weather (subtypes shown)</div>
+    <div><span class="dot purple"></span>Runway/Closure</div>
     <div><span class="dot amber"></span>ATC Capacity</div>
     <div><span class="dot pink"></span>ATC Staffing</div>
+    <div><span class="dot cyan"></span>Airspace/Restrictions</div>
+    <div><span class="dot indigo"></span>Equipment/Tech</div>
     <div><span class="dot teal"></span>Industrial Action</div>
     <div><span class="dot lime"></span>Other</div>
   </div>
@@ -126,7 +136,7 @@
 <script>
 /* ===== helpers ===== */
 const toastWrap=document.getElementById('toast');
-function toast(msg){ const d=document.createElement('div'); d.className='t'; d.textContent=msg; toastWrap.appendChild(d); setTimeout(()=>d.remove(), 5000); }
+function toast(msg){ const d=document.createElement('div'); d.className='t'; d.textContent=msg; toastWrap.appendChild(d); setTimeout(()=>d.remove(), 5200); }
 const diag=document.getElementById('diag'); function say(msg){ diag.textContent='Diagnostics: '+msg; console.log('[ECAC]', msg); }
 const lblCount=document.getElementById('lbl-count');
 const tuNext=document.getElementById('tu-next');
@@ -153,11 +163,11 @@ const SRC={ airports:[ 'https://ourairports.com/data/airports.csv', 'https://raw
 const ECAC=new Set(["AL","AM","AT","AZ","BA","BE","BG","CH","CY","CZ","DE","DK","EE","ES","FI","FR","GE","GR","HR","HU","IE","IS","IT","LI","LT","LU","LV","MC","MD","ME","MK","MT","NL","NO","PL","PT","RO","RS","SE","SI","SK","SM","TR","UA","UK"]);
 const state={ airportsByIcao:new Map(), runwaysByIcao:new Map(), metarByIcao:new Map(), tafByIcao:new Map(), snowtamByIcao:new Map(), tacticalByIcao:new Map(), selectedICAO:null, autoTimer:null, autoTUTimer:null, autoTUNext:0, lastTUMap:new Map(), notify:false, _lastTUItems:null };
 
-/* ===== parsing ===== */
+/* ===== parsing & building ===== */
 function parseCSV(line){ const out=[]; let cur='',q=false; for(let i=0;i<line.length;i++){ const c=line[i]; if(c==='"'){ q=!q; continue; } if(c===','&&!q){ out.push(cur); cur=''; continue; } cur+=c; } out.push(cur); return out; }
 function addAirport(icao,name,lat,lon,country){ const marker = L.circleMarker([lat,lon], {radius:5, color:'#596275', weight:3, fillColor:'#9aa0a6', fillOpacity:1}); marker.addTo(airportLayer).on('click', ()=> onAirportClick(icao)); state.airportsByIcao.set(icao, {icao,name,lat,lon,country, marker}); }
 function snowFill(cat){ if(cat==='RED') return '#ff4d4d'; if(cat==='ORANGE') return '#ff8c42'; if(cat==='YELLOW') return '#f5c744'; return '#9aa0a6'; }
-function catStroke(cat){ switch(cat){ case 'WEATHER': return '#60a5fa'; case 'ATC_CAPACITY': return '#f59e0b'; case 'ATC_STAFFING': return '#f472b6'; case 'INDUSTRIAL': return '#2dd4bf'; default: return '#a3e635'; } }
+function catStroke(cat){ switch(cat){ case 'WEATHER': return '#60a5fa'; case 'RUNWAY_STATUS': return '#a78bfa'; case 'ATC_CAPACITY': return '#f59e0b'; case 'ATC_STAFFING': return '#f472b6'; case 'AIRSPACE': return '#22d3ee'; case 'EQUIPMENT': return '#818cf8'; case 'INDUSTRIAL': return '#2dd4bf'; default: return '#a3e635'; } }
 function styleMarker(icao, snowCat, tuCat){ const a=state.airportsByIcao.get(icao); if(!a) return; a.marker.setStyle({ fillColor: snowFill(snowCat), color: tuCat?catStroke(tuCat):'#596275', weight: tuCat?4:3 }); }
 
 /* ===== airport/runway loading ===== */
@@ -184,54 +194,84 @@ async function onAirportClick(icao){ state.selectedICAO=icao; const a=state.airp
 
 window.__refetch = async (icao,what,btn)=>{ if(btn){ btn.disabled=true; btn.dataset.prev=btn.textContent; btn.textContent='Fetching…'; } if(what==='metar') await fetchMetarOne(icao); else if(what==='taf') await fetchTafOne(icao); else { const s=await fetchSnowtamFAA(icao); if(s){ state.snowtamByIcao.set(icao,s); styleMarker(icao,s.category, state.tacticalByIcao.get(icao)?.cat); drawRunwaysFor(icao); rebuildPopup(icao);} } if(btn){ btn.textContent=btn.dataset.prev; btn.disabled=false; } };
 
-/* ===== Tactical classification (with detailed weather subtypes) ===== */
+/* ===== Tactical classification ===== */
 const CAT = {
   WEATHER: {
     label:'Weather', badge:'badge-blue', stroke:'#60a5fa',
     sub: [
-      { label:'Thunderstorms/CB', keys:[/\bCB\b|\bTS\b|TSRA|VCTS|LTG|thunder/i] },
-      { label:'Low Visibility',    keys:[/low vis|\bLVP\b|\bFG\b|\bBR\b|mist|poor visibility|RVR|CAT I|CAT II|CAT III/i] },
-      { label:'Strong Wind/LLWS',  keys:[/strong winds?|gust(?:ing)?\s*\d+|\bLLWS\b|wind shear|crosswind|tailwind/i] },
-      { label:'Snow/Ice',          keys:[/\bsnow\b|ice|icing|freezing|FZRA|FZDZ|FZFG|slush|RWYCC|de-ice|deicing/i] },
-      { label:'Heavy Rain',        keys:[/heavy rain|torrential|intense rain|\+RA|SHRA/i] }
+      { label:'Thunderstorms/CB', keys:[/\bCB\b|\bTS\b|TSRA|VCTS|LTG|thunder/i], score:3 },
+      { label:'Low Visibility',    keys:[/low vis|\bLVP\b|\bFG\b|\bBR\b|mist|poor visibility|RVR|CAT I|CAT II|CAT III/i], score:3 },
+      { label:'Strong Wind/LLWS',  keys:[/strong winds?|gust(?:ing)?\s*\d+|\bLLWS\b|wind shear|crosswind|tailwind/i], score:2 },
+      { label:'Snow/Ice',          keys:[/\bsnow\b|ice|icing|freezing|FZRA|FZDZ|FZFG|slush|RWYCC|de-ice|deicing/i], score:3 },
+      { label:'Heavy Rain',        keys:[/heavy rain|torrential|intense rain|\+RA|SHRA/i], score:2 }
     ],
-    keys:[/weather|wx|cb|ts|thunder|fog|icing|snow|wind|rain|showers|visibility|gust|hail|storm/i]
+    keys:[/weather|wx|fog|hail|storm/i], score:1
   },
-  ATC_CAPACITY: { label:'ATC Capacity', badge:'badge-amber', stroke:'#f59e0b', keys:[/capacity|regulat(ed|ion)|tma|sector load|atfm|ctot|rate|demand/i] },
-  ATC_STAFFING: { label:'ATC Staffing', badge:'badge-pink', stroke:'#f472b6', keys:[/staff|staffing|controllers? shortage|controller availability|rostering/i] },
-  INDUSTRIAL:   { label:'Industrial Action', badge:'badge-teal', stroke:'#2dd4bf', keys:[/industrial|strike|union|action/i] },
-  OTHER:        { label:'Other', badge:'badge-lime', stroke:'#a3e635', keys:[] }
+  RUNWAY_STATUS: { label:'Runway/Closure', badge:'badge-purple', stroke:'#a78bfa', keys:[/rwy|runway|taxiway|wip|work in progress|closure|closed|braking|ba\b|contaminated|snowbank|not available|sweeping|plough|de-ice ops/i], score:2 },
+  ATC_CAPACITY:  { label:'ATC Capacity',  badge:'badge-amber', stroke:'#f59e0b', keys:[/capacity|regulat(ed|ion)|atfm|ctot|rate|demand|flow|gdp\b/i], score:2 },
+  ATC_STAFFING:  { label:'ATC Staffing',  badge:'badge-pink',  stroke:'#f472b6', keys:[/staff|staffing|controller(s)? shortage|controller availability|rostering|reduced manning/i], score:2 },
+  AIRSPACE:      { label:'Airspace/Restrictions', badge:'badge-cyan', stroke:'#22d3ee', keys:[/airspace|restriction|segregated|tsa\b|tra\b|danger area|military|activity|area active|activation/i], score:2 },
+  EQUIPMENT:     { label:'Equipment/Tech', badge:'badge-indigo', stroke:'#818cf8', keys:[/ils|vor|ndb|radar|comms?|power outage|system (?:down|failure)|degraded|technical|outage|atc sys/i], score:2 },
+  INDUSTRIAL:    { label:'Industrial Action', badge:'badge-teal', stroke:'#2dd4bf', keys:[/industrial|strike|union|action/i], score:2 },
+  OTHER:         { label:'Other', badge:'badge-lime', stroke:'#a3e635', keys:[], score:0 }
 };
-function classifyTU(text){
+const NEGATIVE=[/no (?:significant )?impact/i,/improv(?:e|ing)/i,/lifted/i,/cancelled/i,/resumed? normal/i,/stand ?down/i,/ended/i,/concluded/i,/NIL/i];
+
+function scoreFor(text, def){
+  let best={cat:'OTHER',score:-1, sub:null};
   for(const [k,v] of Object.entries(CAT)){
-    if(v.keys.some(rx=>rx.test(text))){
-      let sub=null;
-      if(k==='WEATHER'){
-        for(const sc of v.sub){ if(sc.keys.some(rx=>rx.test(text))){ sub=sc.label; break; } }
-      }
-      return { cat:k, catLabel:v.label, stroke:v.stroke, badgeCls:v.badge, sub };
+    let s=0;
+    if(v.keys.some(rx=>rx.test(text))) s+=v.score;
+    if(k==='WEATHER'){
+      for(const sc of v.sub){ if(sc.keys.some(rx=>rx.test(text))){ s+=sc.score; if(!best.sub) best.sub=sc.label; } }
     }
+    if(s>best.score) best={cat:k,score:s, sub:best.sub};
   }
-  return { cat:'OTHER', catLabel:CAT.OTHER.label, stroke:CAT.OTHER.stroke, badgeCls:CAT.OTHER.badge, sub:null };
+  // negation/benign signal → downgrade to OTHER, but keep sub tag if present
+  if(NEGATIVE.some(rx=>rx.test(text))) return {cat:'OTHER', sub:best.sub};
+  return {cat:best.cat, sub:best.sub};
 }
 
-/* ===== Extract, filter, UI and change notifications ===== */
-function extractTactical(text){
-  let t=text;
-  const idx=t.toLowerCase().indexOf('tactical update'); if(idx>=0) t=t.slice(idx);
-  const lines = t.split(/\n+/).map(s=>s.trim()).filter(Boolean);
-  const out=[]; let section=null; let timeLine=null;
-  for(const s of lines){
-    const mTime = s.match(/\b(\d{1,2}\s\w+\s\d{4}|\d{2}:\d{2}|\d{1,2}\s\w+\s\d{2,4}\s+\d{2}:\d{2})/i);
-    if(!timeLine && mTime) timeLine=s;
-    if(/^(Aerodromes?|Airspace)/i.test(s)) { section=s; continue; }
-    const m = s.match(/\b([A-Z]{4})\b\s*(?:\(([^)]+)\))?.*/);
-    if(m && (section && /^Aerodromes?/i.test(section))){
-      const icao=m[1]; const cls=classifyTU(s);
-      out.push({icao, text:s, cat:cls.cat, catLabel:cls.catLabel, badgeCls:cls.badgeCls, sub:cls.sub});
+/* Robust extractor: aggregates by ICAO, splits bullets, handles multi-ICAO lines */
+function cleanText(html){
+  return html.replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/<br\s*\/?>(?=\s*\n)/gi,'\n').replace(/<[^>]+>/g,'\n');
+}
+function splitItems(block){
+  return block.split(/\n|•|\u2022|—|–|;|\|/).map(s=>s.trim()).filter(Boolean);
+}
+function extractICAOs(s){
+  const m=s.toUpperCase().match(/\b[A-Z]{4}\b/g);
+  return m?Array.from(new Set(m)) : [];
+}
+function extractTactical(html){
+  const txt = cleanText(html);
+  let t=txt;
+  const idx=t.toLowerCase().indexOf('tactical update');
+  if(idx>=0) t=t.slice(idx);
+  const chunks = splitItems(t);
+  const perIcao = new Map();
+  let timeLine = (t.match(/\b\d{1,2}\s\w+\s\d{4}\b.*?\b\d{2}:\d{2}\b/i) || t.match(/\b\d{2}:\d{2}\b/))?.[0] || '';
+  for(const line of chunks){
+    const icaos = extractICAOs(line);
+    if(!icaos.length) continue;
+    const sc = scoreFor(line);
+    for(const code of icaos){
+      if(!perIcao.has(code)) perIcao.set(code, { icao:code, texts:[], best:{cat:'OTHER',sub:null,score:-1} });
+      const rec = perIcao.get(code);
+      rec.texts.push(line);
+      // recompute best per add
+      const sc2 = scoreFor(line);
+      const catScore = (Object.values(CAT).find(c=>c.label && c.stroke) || {score:0});
+      const sVal = sc2.cat && CAT[sc2.cat]? CAT[sc2.cat].score : 0;
+      const newScore = sVal + (sc2.sub?1:0);
+      if(newScore > rec.best.score){
+        rec.best = {cat: sc2.cat, sub: sc2.sub, score:newScore};
+      }
     }
   }
-  return { items: out, time: timeLine||'' };
+  // Return array
+  const items = Array.from(perIcao.values()).map(v=>({ icao:v.icao, text: Array.from(new Set(v.texts)).join('\n'), cat: v.best.cat||'OTHER', catLabel: CAT[v.best.cat||'OTHER'].label, badgeCls: CAT[v.best.cat||'OTHER'].badge, sub: v.best.sub }));
+  return { items, time: timeLine };
 }
 function applyFilters(items){
   const boxen = Array.from(document.querySelectorAll('.filters input[type=checkbox]'));
@@ -285,8 +325,7 @@ async function fetchEuroTactical(notifyChanges=false){
   for(const u of urls){
     try{
       const html = await fetchViaAll(u);
-      const txt = html.replace(/<br\s*\/?>(?=\s*\n)/gi,'\n').replace(/<[^>]+>/g,'\n');
-      const {items, time} = extractTactical(txt);
+      const {items, time} = extractTactical(html);
       if(items && items.length){ state._lastTUItems = items; updateTacticalUI(items, time, notifyChanges); return; }
     }catch(e){ say('Eurocontrol fetch failed ('+u+'): '+e.message); }
   }
@@ -361,7 +400,7 @@ document.getElementById('btn-reload').addEventListener('click', ()=> loadAirport
   await loadRunways();
   await refreshAll();
   state.autoTimer=setInterval(()=>refreshAll(), 15*60*1000);
-  say('Ready. Map fix applied. Use Fetch TU (tries detached view URL first). If blocked, use Paste TU.');
+  say('Ready. Stronger Tactical parser + deeper categorization; map fix retained.');
 })();
 </script>
 </body>
