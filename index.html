@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>ECAC Airports — METAR/TAF + SNOWTAM (Major Only) — v11</title>
+<title>ECAC Airports — METAR/TAF + SNOWTAM (Major Only) — v12</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
   html, body { height: 100%; margin: 0; background:#0e0f12; color:#e9eef3; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
@@ -40,35 +40,28 @@
   .rwy-green { fill:#77dd77; opacity:0.75; } .rwy-yellow { fill:#ffe680; opacity:0.8; } .rwy-orange { fill:#ffb266; opacity:0.8; } .rwy-red { fill:#ff8080; opacity:0.85; }
   .rwy-outline { color:#f1f3f5; font-size:12px; text-shadow: 0 2px 3px #000; }
 
-  .diag { position: fixed; left: 12px; bottom: 12px; background:#222; border:1px solid #555; padding:8px 10px; border-radius:6px; font-size:12px; z-index:1000; max-width: 48vw; }
+  .diag { position: fixed; left: 12px; bottom: 12px; background:#222; border:1px solid #555; padding:8px 10px; border-radius:6px; font-size:12px; z-index:1000; max-width: 60vw; }
   .diag.ok { border-color:#2a4; }
   .diag.err { border-color:#a42; }
 
   /* Toast */
   .toast { position: fixed; right: 14px; top: 14px; display:flex; flex-direction:column; gap:8px; z-index: 3000; }
   .toast .t { background:#14161a; border:1px solid #2a2f39; color:#e9eef3; padding:8px 10px; border-radius:8px; font-size:13px; box-shadow: 0 6px 18px rgba(0,0,0,.3); }
-
-  /* Settings modal */
-  .modal { position: fixed; inset: 0; background: rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; z-index:2000; }
-  .modal .card { width:min(880px, 90vw); background:#171a1f; border:1px solid #2a2f39; border-radius:10px; padding:16px; color:#e9eef3; }
-  .modal h2 { margin:8px 0 12px; font-size:18px; }
-  .modal textarea { width:100%; height: 320px; background:#0f1115; color:#e9eef3; border:1px solid #2a2f39; border-radius:8px; padding:8px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; }
-  .row-btns { display:flex; gap:8px; justify-content:flex-end; margin-top:8px; }
 </style>
 </head>
 <body>
 <div class="app">
   <div class="topbar">
-    <h1>ECAC Airports — METAR/TAF + SNOWTAM (Major Only) — v11</h1>
+    <h1>ECAC Airports — METAR/TAF + SNOWTAM (Major Only) — v12</h1>
     <span class="badge">Large & Medium airports only</span>
     <div class="spacer"></div>
     <label style="display:flex;align-items:center;gap:6px;opacity:.9;">
       <input type="checkbox" id="chk-runways" checked/>
       Show Runways
     </label>
+    <button id="btn-test" class="btn">Run connectivity test</button>
     <button id="btn-refresh" class="btn">Refresh now</button>
     <button id="btn-auto" class="btn" data-on="1">Auto 15m: ON</button>
-    <button id="btn-settings" class="btn">Settings</button>
   </div>
   <div id="map-wrap">
     <div id="map"></div>
@@ -84,504 +77,258 @@
 <div id="diag" class="diag">Diagnostics: starting…</div>
 <div id="toast" class="toast"></div>
 
-<!-- Settings modal -->
-<div id="modal" class="modal">
-  <div class="card">
-    <h2>Per‑country AIS sources</h2>
-    <p style="opacity:.8;margin:6px 0 10px;">Add or adjust country‑specific AIS endpoints. Use <code>{ICAO}</code> placeholder in URLs. Multiple URLs per country are tried in order. These will be attempted <em>in addition to</em> the FAA sources. Note: many AIS sites require session/captcha and may block CORS; success varies by provider.</p>
-    <textarea id="ais-json"></textarea>
-    <div class="row-btns">
-      <button id="btn-close" class="btn">Close</button>
-      <button id="btn-save" class="btn">Save</button>
-      <button id="btn-reset" class="btn">Reset defaults</button>
-    </div>
-  </div>
-</div>
-
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-/* ==================== CONFIG ==================== */
-const CORS_HELPER = 'https://corsproxy.io/?';
+/* ==================== MULTI‑PROXY SETUP ==================== */
+const PROXIES = [
+  (u)=>u, // direct
+  (u)=> 'https://corsproxy.io/?' + encodeURIComponent(u),
+  (u)=> 'https://thingproxy.freeboard.io/fetch/' + u,
+  (u)=> 'https://r.jina.ai/http://'+ u.replace(/^https?:\/\//,'') // read‑only cache, but great for CSV/HTML text
+];
+async function fetchViaAll(url){
+  let lastErr = null;
+  for(const wrap of PROXIES){
+    const testUrl = wrap(url);
+    try{
+      const r = await fetch(testUrl, { cache:'no-store' });
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      const txt = await r.text();
+      if(!txt || txt.length<5) throw new Error('Empty');
+      return { txt, via:testUrl };
+    }catch(e){ lastErr = e; }
+  }
+  throw lastErr || new Error('All proxies failed for: '+url);
+}
+function toast(msg){ const d=document.createElement('div'); d.className='t'; d.textContent=msg; document.getElementById('toast').appendChild(d); setTimeout(()=>d.remove(), 3500); }
+const diag = document.getElementById('diag'); function say(msg, cls){ diag.textContent = 'Diagnostics: ' + msg; if(cls) diag.className = 'diag ' + cls; }
+
+/* ==================== SOURCES (with extra mirrors) ==================== */
 const SRC = {
   airports: [
     'https://ourairports.com/data/airports.csv',
-    CORS_HELPER + encodeURIComponent('https://ourairports.com/data/airports.csv')
+    'https://raw.githubusercontent.com/davidmegginson/ourairports-data/master/airports.csv'
   ],
   runways: [
     'https://ourairports.com/data/runways.csv',
-    CORS_HELPER + encodeURIComponent('https://ourairports.com/data/runways.csv')
+    'https://raw.githubusercontent.com/davidmegginson/ourairports-data/master/runways.csv'
   ],
-  metar: (ids) => CORS_HELPER + encodeURIComponent(`https://aviationweather.gov/api/data/metar?ids=${ids}&format=raw`),
-  taf:   (ids) => CORS_HELPER + encodeURIComponent(`https://aviationweather.gov/api/data/taf?ids=${ids}&format=raw`),
-  metar_one: (id) => CORS_HELPER + encodeURIComponent(`https://aviationweather.gov/api/data/metar?ids=${id}&format=raw`),
-  taf_one:   (id) => CORS_HELPER + encodeURIComponent(`https://aviationweather.gov/api/data/taf?ids=${id}&format=raw`),
-
-  // FAA sources (fallbacks)
-  notam_raw1: (icao) => CORS_HELPER + encodeURIComponent(`https://notams.aim.faa.gov/notamSearch/search?reportType=Raw&formatType=International&designators=${icao}`),
-  notam_raw2: (icao) => CORS_HELPER + encodeURIComponent(`https://www.notams.faa.gov/dinsQueryWeb/queryRetrievalMapAction.do?retrieveLocId=${icao}&actionType=notamRetrievalByICAOs&reportType=RawIntl`),
+  metar_one: (id) => `https://aviationweather.gov/api/data/metar?ids=${id}&format=raw`,
+  taf_one:   (id) => `https://aviationweather.gov/api/data/taf?ids=${id}&format=raw`,
+  metar: (ids) => `https://aviationweather.gov/api/data/metar?ids=${ids}&format=raw`,
+  taf:   (ids) => `https://aviationweather.gov/api/data/taf?ids=${ids}&format=raw`,
+  notam_raw1: (icao) => `https://notams.aim.faa.gov/notamSearch/search?reportType=Raw&formatType=International&designators=${icao}`,
+  notam_raw2: (icao) => `https://www.notams.faa.gov/dinsQueryWeb/queryRetrievalMapAction.do?retrieveLocId=${icao}&actionType=notamRetrievalByICAOs&reportType=RawIntl`,
 };
-
-// Updated default per‑country AIS URL templates
-const DEFAULT_COUNTRY_AIS = {
-  "HU": [ "https://ais.hungarocontrol.hu/?icao={ICAO}" ],
-  "DE": [ "https://secais.dfs.de/pilotservice/?icao={ICAO}" ],
-  "FR": [ "https://www.sia.aviation-civile.gouv.fr/?icao={ICAO}" ],
-  "UK": [ "https://www.nats-uk.ead-it.com/fwf-natsuk/public/user/account/home.html?icao={ICAO}" ],
-  "PL": [ "https://amc.pansa.pl/?icao={ICAO}" ],
-  "RO": [ "https://ais.romatsa.ro/?icao={ICAO}" ],
-  "LR": [ "https://example.lr/ais?icao={ICAO}" ]
-};
-
-const state = {
-  airportsByIcao:new Map(), runwaysByIcao:new Map(), snowtamByIcao:new Map(),
-  metarByIcao:new Map(), tafByIcao:new Map(), autoTimer:null, selectedICAO:null,
-  countryAIS: JSON.parse(localStorage.getItem('countryAIS') || JSON.stringify(DEFAULT_COUNTRY_AIS))
-};
-const sleep = ms => new Promise(r => setTimeout(r, ms));
 const ECAC = new Set(["AL","AM","AT","AZ","BA","BE","BG","CH","CY","CZ","DE","DK","EE","ES","FI","FR","GE","GR","HR","HU","IE","IS","IT","LI","LT","LU","LV","MC","MD","ME","MK","MT","NL","NO","PL","PT","RO","RS","SE","SI","SK","SM","TR","UA","UK"]);
 
-const diag = document.getElementById('diag');
-function say(msg, cls){ diag.textContent = 'Diagnostics: ' + msg; if(cls){ diag.className = 'diag ' + cls; } }
-const toastWrap = document.getElementById('toast');
-function toast(msg){ const d=document.createElement('div'); d.className='t'; d.textContent=msg; toastWrap.appendChild(d); setTimeout(()=>{ d.remove(); }, 3000); }
-
-/* ===== Map ===== */
+/* ==================== MAP ==================== */
 const map = L.map('map', { worldCopyJump: true, zoomControl: true }).setView([49.0, 11.0], 5);
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 17, minZoom: 3, attribution: '&copy; OpenStreetMap' }).addTo(map);
 const airportLayer = L.layerGroup().addTo(map);
 const runwayLayer  = L.layerGroup().addTo(map);
 
-/* ===== Helpers ===== */
+const state = { airportsByIcao:new Map(), runwaysByIcao:new Map(), snowtamByIcao:new Map(), metarByIcao:new Map(), tafByIcao:new Map(), selectedICAO:null, autoTimer:null };
+
 function makeMarker(lat, lon, icao) {
-  const el = document.createElement('div');
-  el.style.width = '10px'; el.style.height = '10px'; el.style.borderRadius = '50%';
-  el.style.background = '#9aa0a6'; el.style.border = '1px solid #555'; el.title = icao;
-  return L.marker([lat, lon], { icon: L.divIcon({ className:'', html: el, iconSize:[10,10], iconAnchor:[5,5] }) });
+  const el = document.createElement('div'); el.style.cssText='width:10px;height:10px;border-radius:50%;background:#9aa0a6;border:1px solid #555;';
+  return L.marker([lat, lon], { icon: L.divIcon({ className:'', html: el, iconSize:[10,10], iconAnchor:[5,5] }), title:icao });
 }
-function styleMarker(marker, cat) {
-  const el = marker.getElement()?.firstChild || marker._icon?.firstChild; if(!el) return;
-  el.classList.remove('blink-fast','blink-slow'); el.style.background = '#9aa0a6'; if(!cat) return;
-  if(cat === 'RED')   { el.style.background = '#ff4d4d'; el.classList.add('blink-fast'); }
-  if(cat === 'ORANGE'){ el.style.background = '#ff8c42'; el.classList.add('blink-slow'); }
-  if(cat === 'YELLOW'){ el.style.background = '#f5c744'; }
-}
-function parseCSV(line){
-  const out=[]; let cur=''; let q=false;
-  for(let i=0;i<line.length;i++){
-    const c=line[i];
-    if(c==='\"'){ q=!q; continue; }
-    if(c===',' && !q){ out.push(cur); cur=''; continue; }
-    cur+=c;
-  }
-  out.push(cur);
-  return out;
-}
-async function fetchWithFallback(urls){
-  let lastErr=null;
-  for(const u of urls){
-    try{
-      const r = await fetch(u);
-      if(!r.ok) throw new Error('HTTP '+r.status);
-      return await r.text();
-    }catch(e){ lastErr=e; }
-  }
-  throw lastErr || new Error('All fetch attempts failed');
-}
+function styleMarker(marker, cat){ const el = marker.getElement()?.firstChild || marker._icon?.firstChild; if(!el) return; el.classList.remove('blink-fast','blink-slow'); el.style.background='#9aa0a6'; if(!cat) return; if(cat==='RED'){ el.style.background='#ff4d4d'; el.classList.add('blink-fast'); } if(cat==='ORANGE'){ el.style.background='#ff8c42'; el.classList.add('blink-slow'); } if(cat==='YELLOW'){ el.style.background='#f5c744'; } }
+function parseCSV(line){ const out=[]; let cur='',q=false; for(let i=0;i<line.length;i++){ const c=line[i]; if(c==='\"'){ q=!q; continue; } if(c===','&&!q){ out.push(cur); cur=''; continue; } cur+=c; } out.push(cur); return out; }
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
 
-/* ===== Data: Airports/Runways ===== */
-async function loadECACAirports() {
-  say('Loading airports (major only)…');
-  try{
-    const csv = await fetchWithFallback([SRC.airports[0], SRC.airports[1]]);
-    for(const line of csv.split('\n').slice(1)){
-      if(!line.trim()) continue;
-      const cols = parseCSV(line);
-      const [id,ident,type,name,lat,lon,, , iso_country] = cols;
-      const country = (iso_country==='GB')?'UK':iso_country;
-      if(!ECAC.has(country)) continue;
-      if(!['large_airport','medium_airport'].includes(type)) continue;
-      if(!ident || ident.length!==4) continue;
-      const latN = parseFloat(lat), lonN = parseFloat(lon);
-      if(!isFinite(latN) || !isFinite(lonN)) continue;
-      const marker = makeMarker(latN, lonN, ident).addTo(airportLayer);
-      marker.on('click', () => onAirportClick(ident));
-      state.airportsByIcao.set(ident, { icao:ident, name, lat:latN, lon:lonN, country, marker });
-    }
-    say(`Airports loaded: ${state.airportsByIcao.size}`, 'ok');
-  }catch(e){
-    say('Airports load failed — minimal fallback loaded.', 'err');
-    const fallback = [
-      {icao:'LHBP', name:'Budapest', lat:47.4369, lon:19.2556},
-      {icao:'EGLL', name:'London Heathrow', lat:51.4700, lon:-0.4543},
-      {icao:'EDDM', name:'Munich', lat:48.3538, lon:11.7861}
-    ];
-    for(const a of fallback){
-      const m = makeMarker(a.lat, a.lon, a.icao).addTo(airportLayer);
-      m.on('click', ()=> onAirportClick(a.icao));
-      state.airportsByIcao.set(a.icao, {...a, marker:m, country:'HU'});
-    }
+/* ==================== LOAD AIRPORTS/RUNWAYS ==================== */
+async function loadECACAirports(){
+  say('Loading airports…');
+  let csv=null, used=null;
+  for(const u of SRC.airports){
+    try{ const res = await fetchViaAll(u); csv=res.txt; used=res.via; break; }catch(e){}
   }
+  if(!csv){ say('Airports load failed — network/CORS? Using minimal fallback.', 'err'); const fb=[{icao:'LHBP',name:'Budapest',lat:47.4369,lon:19.2556},{icao:'EGLL',name:'London Heathrow',lat:51.47,lon:-0.4543},{icao:'EDDM',name:'Munich',lat:48.3538,lon:11.7861}]; for(const a of fb){ const m=makeMarker(a.lat,a.lon,a.icao).addTo(airportLayer); m.on('click',()=>onAirportClick(a.icao)); state.airportsByIcao.set(a.icao,{...a,marker:m,country:'HU'});} return; }
+  let added=0;
+  for(const line of csv.split('\n').slice(1)){
+    if(!line.trim()) continue;
+    const [id,ident,type,name,lat,lon,, , iso_country] = parseCSV(line);
+    const country = (iso_country==='GB')?'UK':iso_country;
+    if(!ECAC.has(country)) continue;
+    if(!['large_airport','medium_airport'].includes(type)) continue;
+    if(!ident || ident.length!==4) continue;
+    const latN=parseFloat(lat), lonN=parseFloat(lon); if(!isFinite(latN)||!isFinite(lonN)) continue;
+    const marker = makeMarker(latN,lonN,ident).addTo(airportLayer);
+    marker.on('click', ()=> onAirportClick(ident));
+    state.airportsByIcao.set(ident,{icao:ident,name,lat:latN,lon:lonN,country,marker});
+    added++;
+  }
+  say(`Airports loaded: ${added} (via ${used.includes('corsproxy')?'corsproxy.io':used.includes('freeboard')?'thingproxy':'direct/jina'})`, 'ok');
 }
-
-async function loadRunways() {
+async function loadRunways(){
   say('Loading runways…');
-  try{
-    const text = await fetchWithFallback([SRC.runways[0], SRC.runways[1]]);
-    const byIcao = new Map();
-    for(const line of text.split('\n').slice(1)){
-      if(!line.trim()) continue;
-      const c = parseCSV(line);
-      const airport_ident = c[2];
-      if(!airport_ident || airport_ident.length!==4) continue;
-      const length_ft = parseFloat(c[3]), width_ft = parseFloat(c[4]);
-      const le_ident = c[8], le_lat = parseFloat(c[10]), le_lon = parseFloat(c[11]);
-      const he_ident = c[13], he_lat = parseFloat(c[15]), he_lon = parseFloat(c[16]);
-      if(!isFinite(le_lat) || !isFinite(le_lon) || !isFinite(he_lat) || !isFinite(he_lon)) continue;
-      const length_m = isFinite(length_ft)? Math.round(length_ft*0.3048) : null;
-      const width_m  = isFinite(width_ft)?  Math.round(width_ft*0.3048) : 45;
-      const entry = { airport: airport_ident, ident: `${le_ident}/${he_ident}`, length_m, width_m,
-        ends: [ { ident:le_ident, lat:le_lat, lon:le_lon }, { ident:he_ident, lat:he_lat, lon:he_lon } ] };
-      if(!byIcao.has(airport_ident)) byIcao.set(airport_ident, []);
-      byIcao.get(airport_ident).push(entry);
-    }
-    state.runwaysByIcao = byIcao;
-    say('Runways loaded.', 'ok');
-  }catch(e){
-    say('Runways load failed — runway overlay unavailable.', 'err');
+  let csv=null;
+  for(const u of SRC.runways){
+    try{ const res=await fetchViaAll(u); csv=res.txt; break; }catch(e){}
   }
+  if(!csv){ say('Runways load failed — runway overlay unavailable.', 'err'); return; }
+  const byIcao=new Map();
+  for(const line of csv.split('\n').slice(1)){
+    if(!line.trim()) continue;
+    const c=parseCSV(line); const icao=c[2]; if(!icao||icao.length!==4) continue;
+    const length_ft=parseFloat(c[3]), width_ft=parseFloat(c[4]);
+    const le_ident=c[8], le_lat=parseFloat(c[10]), le_lon=parseFloat(c[11]);
+    const he_ident=c[13], he_lat=parseFloat(c[15]), he_lon=parseFloat(c[16]);
+    if(!isFinite(le_lat)||!isFinite(le_lon)||!isFinite(he_lat)||!isFinite(he_lon)) continue;
+    const length_m=isFinite(length_ft)?Math.round(length_ft*0.3048):null;
+    const width_m=isFinite(width_ft)?Math.round(width_ft*0.3048):45;
+    const entry={airport:icao,ident:`${le_ident}/${he_ident}`,length_m,width_m,ends:[{ident:le_ident,lat:le_lat,lon:le_lon},{ident:he_ident,lat:he_lat,lon:he_lon}]};
+    if(!byIcao.has(icao)) byIcao.set(icao,[]);
+    byIcao.get(icao).push(entry);
+  }
+  state.runwaysByIcao=byIcao;
+  say('Runways loaded.', 'ok');
 }
 
-/* ===== METAR/TAF ===== */
-async function fetchMetarBatch(icaos) {
-  if(icaos.length===0) return;
-  const ids = icaos.join(',');
-  try{
-    const [mTxt, tTxt] = await Promise.all([ fetch(SRC.metar(ids)).then(r=>r.text()), fetch(SRC.taf(ids)).then(r=>r.text()) ]);
-    const parseBlock = (txt) => { const out = new Map(); (txt||'').split('\n').forEach(line=>{ const s=line.trim(); if(!s) return; const icao = s.slice(0,4).toUpperCase(); if(/^[A-Z0-9]{4}$/.test(icao)) out.set(icao, s);}); return out; };
-    const mMap = parseBlock(mTxt); const tMap = parseBlock(tTxt);
-    for(const icao of icaos) {
-      if(mMap.has(icao)) state.metarByIcao.set(icao, mMap.get(icao));
-      if(tMap.has(icao)) state.tafByIcao.set(icao,   tMap.get(icao));
-    }
-  }catch(e){ console.warn('METAR/TAF batch failed', e); }
-}
+/* ==================== METAR/TAF ==================== */
 async function fetchMetarOne(icao){
   try{
-    const m = await fetch(SRC.metar_one(icao)).then(r=>r.text());
-    const lines = m.trim().split('\n').filter(Boolean);
-    if(lines.length) state.metarByIcao.set(icao, lines[0]);
-    const el = document.getElementById(`m_${icao}`); if(el && state.metarByIcao.get(icao)) el.textContent = state.metarByIcao.get(icao);
-    toast(`METAR updated for ${icao}`);
-  }catch{ toast(`METAR fetch failed for ${icao}`); }
+    const {txt,via} = await fetchViaAll(SRC.metar_one(icao));
+    const line = (txt||'').split('\n').filter(Boolean)[0];
+    if(line){ state.metarByIcao.set(icao,line); const el=document.getElementById(`m_${icao}`); if(el) el.textContent=line; }
+    toast(`METAR updated (${icao})`);
+  }catch(e){ toast(`METAR failed (${icao})`); }
 }
 async function fetchTafOne(icao){
   try{
-    const t = await fetch(SRC.taf_one(icao)).then(r=>r.text());
-    const lines = t.trim().split('\n').filter(Boolean);
-    if(lines.length) state.tafByIcao.set(icao, lines[0]);
-    const el = document.getElementById(`t_${icao}`); if(el && state.tafByIcao.get(icao)) el.textContent = state.tafByIcao.get(icao);
-    toast(`TAF updated for ${icao}`);
-  }catch{ toast(`TAF fetch failed for ${icao}`); }
+    const {txt,via} = await fetchViaAll(SRC.taf_one(icao));
+    const line = (txt||'').split('\n').filter(Boolean)[0];
+    if(line){ state.tafByIcao.set(icao,line); const el=document.getElementById(`t_${icao}`); if(el) el.textContent=line; }
+    toast(`TAF updated (${icao})`);
+  }catch(e){ toast(`TAF failed (${icao})`); }
 }
 
-/* ===== SNOWTAM decoding and fetch ===== */
-function codeToText(cc){ switch(cc){case 6:return '6 — Dry (Good)';case 5:return '5 — Good (Wet / light snow or slush)';case 4:return '4 — Good to Medium (Compacted snow)';case 3:return '3 — Medium';case 2:return '2 — Medium to Poor (Slush / standing water)';case 1:return '1 — Poor (Ice)';case 0:return '0 — Less than Poor (Wet ice / water on compacted snow)';default:return (cc==null||isNaN(cc))? '-' : String(cc);}}
-function classifyFromCC(arr){ if(arr.some(x=>x===1||x===0)) return 'RED'; if(arr.some(x=>x===2||x===3)) return 'ORANGE'; if(arr.some(x=>x===4||x===5)) return 'YELLOW'; return 'GREEN'; }
-function parseList3(s){ if(!s) return [null,null,null]; const parts = s.split('/').map(x=>x.trim()).slice(0,3); while(parts.length<3) parts.push(null); return parts; }
-function normalizeContaminant(word){
-  const w = (word||'').toUpperCase().trim();
-  const dict = {
-    'DRY':'DRY','WET':'WET','STANDING WATER':'STANDING WATER','WATER':'STANDING WATER','SLUSH':'SLUSH',
-    'DRY SNOW':'DRY SNOW','WET SNOW':'WET SNOW','ICE':'ICE','FROST':'FROST','COMPACTED SNOW':'COMPACTED SNOW',
-    'WATER ON TOP OF COMPACTED SNOW':'WATER ON TOP OF COMPACTED SNOW',
-    'DRY SNOW ON TOP OF COMPACTED SNOW':'DRY SNOW ON TOP OF COMPACTED SNOW',
-    'DRY SNOW ON TOP OF ICE':'DRY SNOW ON TOP OF ICE',
-    'WET SNOW ON TOP OF COMPACTED SNOW':'WET SNOW ON TOP OF COMPACTED SNOW',
-    'WET SNOW ON TOP OF ICE':'WET SNOW ON TOP OF ICE',
-    'WET ICE':'WET ICE'
-  };
-  if(dict[w]) return dict[w];
-  if(w.includes('STANDING') && w.includes('WATER')) return 'STANDING WATER';
-  if(w.includes('COMPACTED') && w.includes('SNOW') && w.includes('WET')) return 'WET SNOW ON TOP OF COMPACTED SNOW';
-  if(w.includes('COMPACTED') && w.includes('SNOW') && w.includes('DRY')) return 'DRY SNOW ON TOP OF COMPACTED SNOW';
-  if(w.includes('WET') && w.includes('ICE')) return 'WET ICE';
-  if(w.includes('DRY') && w.includes('SNOW') && w.includes('ICE')) return 'DRY SNOW ON TOP OF ICE';
-  if(w.includes('WET') && w.includes('SNOW') && w.includes('ICE')) return 'WET SNOW ON TOP OF ICE';
-  if(w.includes('COMPACTED') && w.includes('SNOW')) return 'COMPACTED SNOW';
-  if(w.includes('DRY') && w.includes('SNOW')) return 'DRY SNOW';
-  if(w.includes('WET') && w.includes('SNOW')) return 'WET SNOW';
-  return w || '-';
-}
-function decodeSnowtam(raw) {
-  const g = (tag) => { const m = raw.match(new RegExp(`\\b${tag}\\)\\s*([^\\n\\r]+)`,'i')); return m? m[1].trim() : null; };
-  const A = g('A'), B = g('B'), C = g('C'), D = g('D'), E = g('E'), F = g('F'), G = g('G'), H = g('H'), N = g('N'), T = g('T');
-  const rwyList = (C? C.split(/[ ,;/]+/).filter(Boolean) : []);
-  const rwycc = parseList3(D).map(x=> x==null? null : parseInt(x,10));
-  const perc = parseList3(E), depth = parseList3(F), cond = parseList3(G).map(normalizeContaminant), width = parseList3(H);
-  let category = classifyFromCC(rwycc); if(/CLSD|CLOSED/i.test(raw)) category='RED';
-  const thirds = ['TDZ (first third)','MID (middle third)','END (last third)'];
-  const lines = [];
-  if(A) lines.push(`Aerodrome: ${A}`);
-  if(B) lines.push(`Report time (UTC): ${B} (MMDDhhmm format per ICAO)`);
-  if(rwyList.length) lines.push(`Runway(s): ${rwyList.join(', ')}`);
-  if(rwycc.some(v=>v!=null)){
-    const ccLine = rwycc.map((v,i)=> `${thirds[i]}: ${codeToText(v)}`).join(' | ');
-    lines.push(`Runway Condition Codes (RWYCC): ${ccLine}`);
-    lines.push(`RWYCC guide: 6 Dry • 5 Good • 4 Good-to-Medium • 3 Medium • 2 Medium-to-Poor • 1 Poor • 0 Less than Poor.`);
-  }
-  if(perc.some(v=>v)){
-    const pLine = perc.map((v,i)=> `${thirds[i]}: ${v? v+'%' : '-'}`).join(' | ');
-    lines.push(`Percent coverage by third: ${pLine}`);
-  }
-  if(depth.some(v=>v)){
-    const dLine = depth.map((v,i)=> `${thirds[i]}: ${v ?? '-'}`).join(' | ');
-    lines.push(`Loose contaminant depth (mm): ${dLine}`);
-  }
-  if(cond.some(v=>v)){
-    const gLine = cond.map((v,i)=> `${thirds[i]}: ${v ?? '-'}`).join(' | ');
-    lines.push(`Condition description by third: ${gLine}`);
-  }
-  if(width.some(v=>v)){
-    const wLine = width.map((v,i)=> `${thirds[i]}: ${v ?? '-'}`).join(' | ');
-    lines.push(`Width to which RWYCC applies (m): ${wLine}`);
-  }
-  if(N) lines.push(`Remarks: ${N}`);
-  if(T) lines.push(`Method/qualifier: ${T}`);
-  return { decoded: lines.join('\n'), category, rwycc };
-}
-
-function getCountryForICAO(icao){ const a = state.airportsByIcao.get(icao); return a?.country || null; }
-
-async function fetchSnowtamFor(icao){
-  const urls = [];
-  const country = getCountryForICAO(icao);
-  if(country && state.countryAIS[country]){
-    for(const tpl of state.countryAIS[country]){
-      const u = tpl.replace('{ICAO}', icao);
-      if(/^https?:\/\//i.test(u)) urls.push(CORS_HELPER + encodeURIComponent(u));
-    }
-  }
-  urls.push(SRC.notam_raw1(icao), SRC.notam_raw2(icao)); // FAA fallbacks
-
-  for(const url of urls){
+/* ==================== SNOWTAM decode+fetch (FAA primary) ==================== */
+function codeToText(cc){ switch(cc){case 6:return '6 — Dry (Good)';case 5:return '5 — Good';case 4:return '4 — Good/Medium';case 3:return '3 — Medium';case 2:return '2 — Medium/Poor';case 1:return '1 — Poor';case 0:return '0 — Less than Poor';default:return (cc==null||isNaN(cc))? '-' : String(cc);}}
+function parseList3(s){ if(!s) return [null,null,null]; const p=s.split('/').map(x=>x.trim()).slice(0,3); while(p.length<3) p.push(null); return p; }
+function classifyFromCC(a){ if(a.some(x=>x===1||x===0))return 'RED'; if(a.some(x=>x===2||x===3))return 'ORANGE'; if(a.some(x=>x===4||x===5))return 'YELLOW'; return 'GREEN'; }
+function decodeSnowtam(raw){ const g=(tag)=>{const m=raw.match(new RegExp(`\\b${tag}\\)\\s*([^\\n\\r]+)`,'i')); return m?m[1].trim():null;}; const A=g('A'),B=g('B'),C=g('C'),D=g('D'),E=g('E'),F=g('F'),G=g('G'),H=g('H'),N=g('N'),T=g('T'); const rwycc=parseList3(D).map(x=>x==null?null:parseInt(x,10)); const cat=classifyFromCC(rwycc); let lines=[]; if(A) lines.push(`Aerodrome: ${A}`); if(B) lines.push(`Report time (UTC): ${B}`); if(C) lines.push(`Runway(s): ${C}`); if(rwycc.some(v=>v!=null)) lines.push(`RWYCC: ${rwycc.join('/')}`); if(E) lines.push(`Coverage %: ${E}`); if(F) lines.push(`Depth (mm): ${F}`); if(G) lines.push(`Condition: ${G}`); if(H) lines.push(`Width (m): ${H}`); if(N) lines.push(`Remarks: ${N}`); if(T) lines.push(`Method: ${T}`); return {decoded:lines.join('\n'), category:cat, rwycc}; }
+async function fetchSnowtamFAA(icao){
+  const sources = [ SRC.notam_raw1(icao), SRC.notam_raw2(icao) ];
+  for(const u of sources){
     try{
-      const txt = await fetch(url).then(r=>r.text());
-      const plain = txt.replace(/<[^>]+>/g, '\n');
-      const blocks = plain.split(/\n\s*\n+/).filter(b => /SNOWTAM/i.test(b) && b.toUpperCase().includes(icao));
-      if(blocks.length){
-        const raw = blocks[0].trim();
-        const dec = decodeSnowtam(raw);
-        return { raw, decoded: dec.decoded, category: dec.category, rwycc: dec.rwycc };
+      const {txt,via}=await fetchViaAll(u);
+      const plain = txt.replace(/<[^>]+>/g,'\n');
+      const block = plain.split(/\n\s*\n+/).find(b=>/SNOWTAM/i.test(b) && b.toUpperCase().includes(icao));
+      if(block){
+        const dec=decodeSnowtam(block.trim());
+        return { raw:block.trim(), decoded:dec.decoded, category:dec.category, rwycc:dec.rwycc };
       }
-    }catch(e){ console.warn('SNOWTAM fetch failed from', url, e); }
+    }catch(e){}
   }
   return null;
 }
 
-/* ===== Runway drawing (zoom ≥ 10) ===== */
+/* ==================== RUNWAY DRAW ==================== */
 function drawRunwaysFor(icao){
   runwayLayer.clearLayers();
-  if(!document.getElementById('chk-runways').checked) return;
-  if(map.getZoom() < 10) return;
-  const rwyList = state.runwaysByIcao.get(icao);
-  if(!rwyList || !rwyList.length){ say('No runway data for this airport.', 'err'); return; }
+  if(map.getZoom()<10) return;
+  const l=state.runwaysByIcao.get(icao); if(!l||!l.length) return;
   const rwycc = state.snowtamByIcao.get(icao)?.rwycc || null;
-
-  function haversine(a,b){
-    const R=6371000, toRad=x=>x*Math.PI/180;
-    const dLat=toRad(b.lat-a.lat), dLon=toRad(b.lng-a.lng);
-    const s = Math.sin(dLat/2)**2 + Math.cos(toRad(a.lat))*Math.cos(toRad(b.lat))*Math.sin(dLon/2)**2;
-    return 2*R*Math.asin(Math.sqrt(s));
-  }
   function interp(a,b,t){ return L.latLng(a.lat+(b.lat-a.lat)*t, a.lng+(b.lng-a.lng)*t); }
-  function classForThird(idx) {
-    const code = Array.isArray(rwycc)? rwycc[idx] : null;
-    if(code==null) return 'rwy-green';
-    if(code<=1) return 'rwy-red';
-    if(code<=3) return 'rwy-orange';
-    if(code<=5) return 'rwy-yellow';
-    return 'rwy-green';
-  }
-  for(const rwy of rwyList){
-    const p1 = L.latLng(rwy.ends[0].lat, rwy.ends[0].lon);
-    const p2 = L.latLng(rwy.ends[1].lat, rwy.ends[1].lon);
-    const dist = haversine(p1,p2);
-    if(!(dist>200 && dist<12000)) continue;
-    const a0=p1, a1=interp(p1,p2,1/3), a2=interp(p1,p2,2/3), a3=p2;
-    const width = (rwy.width_m || 45) / 2;
-    const lat = (p1.lat+p2.lat)/2, m2degLat = 1/111320, m2degLon = 1/(111320*Math.cos(lat*Math.PI/180));
-    function quad(a,b){
-      const dx = (b.lng - a.lng), dy = (b.lat - a.lat);
-      const len = Math.hypot(dx,dy) || 1e-9;
-      const ux = -dy/len, uy = dx/len;
-      const offLon = ux * width * m2degLon;
-      const offLat = uy * width * m2degLat;
-      return [
-        [a.lat - offLat, a.lng - offLon],
-        [a.lat + offLat, a.lng + offLon],
-        [b.lat + offLat, b.lng + offLon],
-        [b.lat - offLat, b.lng - offLon],
-      ];
-    }
-    const segs = [[a0,a1],[a1,a2],[a2,a3]];
-    segs.forEach((seg,i)=> L.polygon(quad(seg[0],seg[1]), { className:'runway-rect '+classForThird(i) }).addTo(runwayLayer));
-    const mid = interp(p1,p2,0.5);
-    L.marker(mid, { icon: L.divIcon({ className:'rwy-outline', html: `<div>${rwy.ident} • ${rwy.length_m? rwy.length_m+' m' : ''}</div>` }) }).addTo(runwayLayer);
+  function classForThird(i){ const c=Array.isArray(rwycc)?rwycc[i]:null; if(c==null) return 'rwy-green'; if(c<=1) return 'rwy-red'; if(c<=3) return 'rwy-orange'; if(c<=5) return 'rwy-yellow'; return 'rwy-green'; }
+  for(const r of l){
+    const p1=L.latLng(r.ends[0].lat,r.ends[0].lon), p2=L.latLng(r.ends[1].lat,r.ends[1].lon);
+    const a0=p1,a1=interp(p1,p2,1/3),a2=interp(p1,p2,2/3),a3=p2;
+    const width=(r.width_m||45)/2, lat=(p1.lat+p2.lat)/2, m2degLat=1/111320, m2degLon=1/(111320*Math.cos(lat*Math.PI/180));
+    function quad(a,b){ const dx=(b.lng-a.lng), dy=(b.lat-a.lat), len=Math.hypot(dx,dy)||1e-9; const ux=-dy/len, uy=dx/len; const offLon=ux*width*m2degLon, offLat=uy*width*m2degLat; return [[a.lat-offLat,a.lng-offLon],[a.lat+offLat,a.lng+offLon],[b.lat+offLat,b.lng+offLon],[b.lat-offLat,b.lng-offLon]]; }
+    [[a0,a1],[a1,a2],[a2,a3]].forEach((seg,i)=> L.polygon(quad(seg[0],seg[1]), { className:'runway-rect '+classForThird(i) }).addTo(runwayLayer));
+    const mid=interp(p1,p2,0.5); L.marker(mid,{icon:L.divIcon({className:'rwy-outline', html:`<div>${r.ident} • ${r.length_m? r.length_m+' m':''}</div>`})}).addTo(runwayLayer);
   }
 }
-map.on('zoomend', ()=>{
-  if(state.selectedICAO) drawRunwaysFor(state.selectedICAO);
-});
+map.on('zoomend', ()=>{ if(state.selectedICAO) drawRunwaysFor(state.selectedICAO); });
 
-/* ===== Popup ===== */
-function buildPopupHTML(icao) {
-  const name = state.airportsByIcao.get(icao)?.name || '';
-  const metar = state.metarByIcao.get(icao) || 'Loading latest…';
-  const taf   = state.tafByIcao.get(icao)   || 'Loading latest…';
-  const snow  = state.snowtamByIcao.get(icao);
-  const catBadge = snow?.category ? (
-    snow.category==='RED' ? '<span class="badge-pill badge-red">SNOWTAM: RED</span>' :
-    snow.category==='ORANGE' ? '<span class="badge-pill badge-orange">SNOWTAM: ORANGE</span>' :
-    snow.category==='YELLOW' ? '<span class="badge-pill badge-yellow">SNOWTAM: YELLOW</span>' : ''
-  ) : '';
-  const snowRaw = snow?.raw ? `<pre>${snow.raw}</pre>` : '<pre>—</pre>';
-  const snowDec = snow?.decoded ? `<pre class="decode">${snow.decoded}</pre>` : '<pre class="decode">—</pre>';
-  return `
-    <div class="popup">
-      <h3>${icao} — ${name} ${catBadge}</h3>
-      <div><strong>METAR</strong></div>
-      ${metar? `<pre id="m_${icao}">${metar}</pre>` : '<pre>—</pre>'}
-      <div><strong>TAF</strong></div>
-      ${taf? `<pre id="t_${icao}">${taf}</pre>` : '<pre>—</pre>'}
-      <div style="display:flex; gap:6px; flex-wrap:wrap; margin:6px 0 8px;">
-        <button onclick="window.__refetchMetar('${icao}', this)" class="btn">Re-fetch METAR</button>
-        <button onclick="window.__refetchTaf('${icao}', this)" class="btn">Re-fetch TAF</button>
-        <button onclick="window.__fetchSnowtam('${icao}', this)" class="btn">Re-fetch SNOWTAM</button>
-        <span style="opacity:.7;font-size:12px;align-self:center;">Tip: Zoom ≥ 10 for runway thirds.</span>
-      </div>
-      <div><strong>SNOWTAM (raw)</strong></div>
-      ${snowRaw}
-      <div><strong>SNOWTAM (decoded)</strong></div>
-      ${snowDec}
+/* ==================== POPUP ==================== */
+function buildPopupHTML(icao){
+  const a=state.airportsByIcao.get(icao); const name=a?.name||'';
+  const metar=state.metarByIcao.get(icao)||'Loading…'; const taf=state.tafByIcao.get(icao)||'Loading…';
+  const snow=state.snowtamByIcao.get(icao);
+  const catBadge = snow?.category ? (snow.category==='RED' ? '<span class="badge-pill badge-red">SNOWTAM: RED</span>' : snow.category==='ORANGE' ? '<span class="badge-pill badge-orange">SNOWTAM: ORANGE</span>' : '<span class="badge-pill badge-yellow">SNOWTAM: YELLOW</span>') : '';
+  return `<div class="popup">
+    <h3>${icao} — ${name} ${catBadge}</h3>
+    <div><strong>METAR</strong></div><pre id="m_${icao}">${metar}</pre>
+    <div><strong>TAF</strong></div><pre id="t_${icao}">${taf}</pre>
+    <div style="display:flex; gap:6px; flex-wrap:wrap; margin:6px 0 8px;">
+      <button onclick="window.__refetchMetar('${icao}', this)" class="btn">Re-fetch METAR</button>
+      <button onclick="window.__refetchTaf('${icao}', this)" class="btn">Re-fetch TAF</button>
+      <button onclick="window.__fetchSnowtam('${icao}', this)" class="btn">Re-fetch SNOWTAM</button>
+      <span style="opacity:.7;font-size:12px;align-self:center;">Tip: Zoom ≥ 10 for runway thirds.</span>
     </div>
-  `;
+    <div><strong>SNOWTAM (raw)</strong></div><pre>${snow?.raw||'—'}</pre>
+    <div><strong>SNOWTAM (decoded)</strong></div><pre class="decode">${snow?.decoded||'—'}</pre>
+  </div>`;
 }
-function rebuildPopup(icao){
-  const a = state.airportsByIcao.get(icao); if(!a) return;
-  const popup = L.popup({ maxWidth: 700, className:'popup', autoPan:true, autoClose:true, closeButton:true })
-      .setLatLng([a.lat, a.lon]).setContent(buildPopupHTML(icao));
-  popup.openOn(map);
-}
+function rebuildPopup(icao){ const a=state.airportsByIcao.get(icao); if(!a) return; L.popup({ maxWidth:720, className:'popup', autoPan:true }).setLatLng([a.lat,a.lon]).setContent(buildPopupHTML(icao)).openOn(map); }
 async function onAirportClick(icao){
-  state.selectedICAO = icao;
-  const a = state.airportsByIcao.get(icao);
-  if(!a) return;
-  if(map.getZoom() < 11) map.setView([a.lat, a.lon], 11); else map.panTo([a.lat, a.lon]);
-  rebuildPopup(icao);
-  drawRunwaysFor(icao);
-  // Auto-fetch *all* data on open:
-  fetchMetarOne(icao);
-  fetchTafOne(icao);
-  (async ()=>{
-    const data = await fetchSnowtamFor(icao);
-    if(data){
-      state.snowtamByIcao.set(icao, data);
-      styleMarker(a.marker, data.category);
-      drawRunwaysFor(icao);
-      rebuildPopup(icao);
-      toast(`SNOWTAM updated for ${icao}`);
-    } else {
-      toast(`No SNOWTAM found for ${icao}`);
-    }
-  })();
+  state.selectedICAO=icao; const a=state.airportsByIcao.get(icao); if(!a) return;
+  if(map.getZoom()<11) map.setView([a.lat,a.lon],11); else map.panTo([a.lat,a.lon]);
+  rebuildPopup(icao); drawRunwaysFor(icao);
+  // auto-fetch all three on open
+  fetchMetarOne(icao); fetchTafOne(icao);
+  const snow = await fetchSnowtamFAA(icao);
+  if(snow){ state.snowtamByIcao.set(icao, snow); styleMarker(a.marker, snow.category); drawRunwaysFor(icao); rebuildPopup(icao); toast(`SNOWTAM updated (${icao})`); }
 }
 
-/* ===== Popup button handlers (manual) ===== */
-window.__refetchMetar = async (icao, btn)=>{
-  if(btn){ btn.disabled=true; btn.dataset.prev=btn.textContent; btn.textContent='Fetching METAR…'; }
-  await fetchMetarOne(icao);
-  if(btn){ btn.textContent=btn.dataset.prev; btn.disabled=false; }
-};
-window.__refetchTaf   = async (icao, btn)=>{
-  if(btn){ btn.disabled=true; btn.dataset.prev=btn.textContent; btn.textContent='Fetching TAF…'; }
-  await fetchTafOne(icao);
-  if(btn){ btn.textContent=btn.dataset.prev; btn.disabled=false; }
-};
-window.__fetchSnowtam = async (icao, btn)=>{
-  if(btn){ btn.disabled=true; btn.dataset.prev=btn.textContent; btn.textContent='Fetching SNOWTAM…'; }
-  const a = state.airportsByIcao.get(icao);
-  const data = await fetchSnowtamFor(icao);
-  if(data){
-    state.snowtamByIcao.set(icao, data);
-    if(a){ styleMarker(a.marker, data.category); }
-    drawRunwaysFor(icao);
-    rebuildPopup(icao);
-    toast(`SNOWTAM updated for ${icao}`);
-  } else {
-    toast(`No SNOWTAM found for ${icao}`);
-  }
-  if(btn){ btn.textContent=btn.dataset.prev; btn.disabled=false; }
-};
+/* manual re-fetch buttons */
+window.__refetchMetar = async (icao,btn)=>{ if(btn){btn.disabled=true;btn.dataset.prev=btn.textContent;btn.textContent='Fetching…';} await fetchMetarOne(icao); if(btn){btn.textContent=btn.dataset.prev;btn.disabled=false;} };
+window.__refetchTaf   = async (icao,btn)=>{ if(btn){btn.disabled=true;btn.dataset.prev=btn.textContent;btn.textContent='Fetching…';} await fetchTafOne(icao); if(btn){btn.textContent=btn.dataset.prev;btn.disabled=false;} };
+window.__fetchSnowtam = async (icao,btn)=>{ if(btn){btn.disabled=true;btn.dataset.prev=btn.textContent;btn.textContent='Fetching…';} const a=state.airportsByIcao.get(icao); const snow=await fetchSnowtamFAA(icao); if(snow){ state.snowtamByIcao.set(icao, snow); if(a) styleMarker(a.marker, snow.category); drawRunwaysFor(icao); rebuildPopup(icao); toast(`SNOWTAM updated (${icao})`);} if(btn){btn.textContent=btn.dataset.prev;btn.disabled=false;} };
 
-/* ===== Refresh cycle & controls ===== */
-async function refreshAll(btn) {
+/* ==================== REFRESH & CONNECTIVITY TEST ==================== */
+async function refreshAll(btn){
   try{
     if(btn){ btn.disabled=true; btn.dataset.prev=btn.textContent; btn.textContent='Refreshing…'; }
     const icaos = Array.from(state.airportsByIcao.keys());
-    const chunk = 120;
+    const chunk=120;
     for(let i=0;i<icaos.length;i+=chunk){
-      await fetchMetarBatch(icaos.slice(i,i+chunk));
+      const part=icaos.slice(i,i+chunk);
+      // batch via direct URL/proxy loop
+      try{ const {txt}=await fetchViaAll(SRC.metar(part.join(','))); txt.split('\n').forEach(s=>{ s=s.trim(); if(!s) return; const id=s.slice(0,4).toUpperCase(); state.metarByIcao.set(id,s); }); }catch(e){}
+      try{ const {txt}=await fetchViaAll(SRC.taf(part.join(','))); txt.split('\n').forEach(s=>{ s=s.trim(); if(!s) return; const id=s.slice(0,4).toUpperCase(); state.tafByIcao.set(id,s); }); }catch(e){}
       await sleep(150);
     }
-    toast('METAR/TAF refresh completed.');
+    toast('METAR/TAF refresh done.');
   } finally {
     if(btn){ btn.textContent=btn.dataset.prev; btn.disabled=false; }
-    if(state.selectedICAO) rebuildPopup(state.selectedICAO);
   }
 }
 document.getElementById('btn-refresh').addEventListener('click', (e)=> refreshAll(e.currentTarget));
 document.getElementById('btn-auto').addEventListener('click', (e)=>{
-  const on = e.currentTarget.dataset.on === '1';
+  const on=e.currentTarget.dataset.on==='1';
   if(on){ clearInterval(state.autoTimer); state.autoTimer=null; e.currentTarget.dataset.on='0'; e.currentTarget.textContent='Auto 15m: OFF'; toast('Auto refresh OFF'); }
   else { state.autoTimer=setInterval(()=>refreshAll(), 15*60*1000); e.currentTarget.dataset.on='1'; e.currentTarget.textContent='Auto 15m: ON'; toast('Auto refresh ON (15m)'); }
 });
-document.getElementById('chk-runways').addEventListener('change', ()=>{
-  if(state.selectedICAO) drawRunwaysFor(state.selectedICAO);
-});
-
-/* ===== Settings modal logic ===== */
-const modal = document.getElementById('modal');
-const ta = document.getElementById('ais-json');
-document.getElementById('btn-settings').addEventListener('click', ()=>{
-  ta.value = JSON.stringify(state.countryAIS, null, 2);
-  modal.style.display = 'flex';
-});
-document.getElementById('btn-close').addEventListener('click', ()=>{ modal.style.display = 'none'; });
-document.getElementById('btn-reset').addEventListener('click', ()=>{
-  state.countryAIS = JSON.parse(JSON.stringify(DEFAULT_COUNTRY_AIS));
-  localStorage.setItem('countryAIS', JSON.stringify(state.countryAIS));
-  ta.value = JSON.stringify(state.countryAIS, null, 2);
-  say('AIS sources reset to defaults.', 'ok');
-});
-document.getElementById('btn-save').addEventListener('click', ()=>{
-  try{
-    const obj = JSON.parse(ta.value);
-    state.countryAIS = obj;
-    localStorage.setItem('countryAIS', JSON.stringify(obj));
-    say('AIS sources saved.', 'ok');
-    modal.style.display = 'none';
-  }catch(e){
-    say('Invalid JSON in AIS settings.', 'err');
+document.getElementById('btn-test').addEventListener('click', async ()=>{
+  const checks = [
+    {name:'Airports CSV (OurAirports)', url:SRC.airports[0]},
+    {name:'Airports CSV (GitHub mirror)', url:SRC.airports[1]},
+    {name:'Runways CSV (OurAirports)', url:SRC.runways[0]},
+    {name:'METAR API (AWC)', url:SRC.metar_one('LHBP')},
+    {name:'TAF API (AWC)', url:SRC.taf_one('LHBP')},
+    {name:'FAA NOTAM Raw 1', url:SRC.notam_raw1('LHBP')},
+  ];
+  let lines=['Connectivity test:'];
+  for(const c of checks){
+    try{ const {via} = await fetchViaAll(c.url); lines.push(`✔ ${c.name} via ${via.split('/')[2]}`); }
+    catch(e){ lines.push(`✘ ${c.name} (blocked)`); }
   }
+  say(lines.join(' | '), 'ok'); toast('Connectivity test finished (see Diagnostics bar).');
 });
 
-/* ===== Boot ===== */
+/* ==================== BOOT ==================== */
 async function boot(){
   await loadECACAirports();
   await loadRunways();
   await refreshAll();
   state.autoTimer=setInterval(()=>refreshAll(), 15*60*1000);
-  say('Map ready. Major airports loaded.', 'ok');
+  say('Map ready. If markers are few, check Diagnostics / run connectivity test.', 'ok');
 }
 boot();
 </script>
