@@ -3,6 +3,8 @@ name: Update SNOWTAM JSON
 on:
   workflow_dispatch: {}
   schedule:
+    # GitHub Actions minimum is ~5 minutes, but external sites may block aggressive polling.
+    # This runs every 10 minutes.
     - cron: "*/10 * * * *"
 
 permissions:
@@ -14,6 +16,7 @@ concurrency:
 
 jobs:
   update:
+    timeout-minutes: 8
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -29,9 +32,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r scripts/requirements.txt
 
-      - name: Update SNOWTAM data
+      - name: Generate data/airports.json and data/snowtam_status.json
         run: |
-          python scripts/update_snowtams.py
+          python -u scripts/update_snowtams.py
 
       - name: Commit changes (if any)
         uses: EndBug/add-and-commit@v9
