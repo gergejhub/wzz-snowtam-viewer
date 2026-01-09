@@ -1,5 +1,5 @@
 {
-  "generatedUtc": "2026-01-09T10:42:44.648321Z",
+  "generatedUtc": "2026-01-09T11:10:57.317762Z",
   "source": {
     "name": "ROMATSA Aeronautical Information Portal (unofficial)",
     "url": "https://flightplan.romatsa.ro/init/notam/snowtam"
@@ -10,7 +10,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -22,7 +22,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -34,7 +34,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -46,7 +46,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -58,7 +58,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -70,7 +70,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -82,7 +82,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -94,7 +94,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -106,7 +106,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -118,7 +118,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -130,7 +130,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -142,7 +142,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -154,7 +154,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -166,7 +166,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -178,7 +178,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -190,7 +190,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -202,7 +202,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -214,7 +214,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -226,7 +226,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -238,7 +238,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -250,7 +250,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -262,7 +262,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -274,7 +274,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -286,7 +286,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -298,7 +298,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -310,7 +310,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -322,7 +322,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -334,7 +334,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -346,7 +346,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -358,7 +358,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -370,7 +370,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -382,7 +382,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -394,7 +394,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -406,7 +406,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -418,7 +418,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -430,7 +430,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -442,7 +442,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -454,7 +454,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -466,7 +466,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -478,7 +478,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -490,7 +490,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -502,7 +502,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -514,7 +514,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -526,7 +526,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -538,7 +538,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -550,7 +550,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -562,7 +562,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -574,7 +574,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -586,7 +586,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -598,7 +598,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -610,7 +610,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -622,7 +622,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -634,7 +634,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -646,7 +646,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -658,7 +658,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -670,7 +670,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -682,7 +682,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -694,7 +694,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -706,7 +706,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
@@ -718,7 +718,7 @@
       "hasSnowtam": false,
       "severity": "unknown",
       "receivedUtc": null,
-      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "error": "URLError: <urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
       "hash": "3f0293745a620247",
       "source": {
         "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
