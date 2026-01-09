@@ -18,6 +18,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Dict, List, Optional, Tuple
 from urllib.request import urlopen, Request
+from urllib.error import URLError, HTTPError
 
 from bs4 import BeautifulSoup
 
@@ -51,10 +52,46 @@ def read_airports_txt(path: str) -> List[str]:
             icaos.append(code)
     return sorted(set(icaos))
 
-def fetch_url(url: str, timeout: int = 35) -> bytes:
-    req = Request(url, headers={"User-Agent": USER_AGENT})
-    with urlopen(req, timeout=timeout) as r:
-        return r.read()
+def fetch_url(url: str, timeout: int = 35, retries: int = 3, backoff_s: float = 2.0) -> bytes:
+    """Fetch URL with small retry/backoff to reduce flaky Action failures."""
+    last_err: Optional[Exception] = None
+    for attempt in range(1, retries + 1):
+        try:
+            req = Request(url, headers={"User-Agent": USER_AGENT})
+            with urlopen(req, timeout=timeout) as r:
+                return r.read()
+        except (HTTPError, URLError, TimeoutError, OSError) as e:
+            last_err = e
+            if attempt < retries:
+                time.sleep(backoff_s * attempt)
+            else:
+                raise
+    # unreachable, but keeps type-checkers happy
+    raise last_err  # type: ignore[misc]
+
+
+def load_cached_airports(out_airports_path: str) -> Dict[str, Airport]:
+    """Load a previously generated data/airports.json as a fallback."""
+    try:
+        with open(out_airports_path, "r", encoding="utf-8") as f:
+            payload = json.load(f)
+        out: Dict[str, Airport] = {}
+        for a in payload.get("airports", []) or []:
+            icao = (a.get("icao") or "").strip().upper()
+            lat = a.get("lat")
+            lon = a.get("lon")
+            if len(icao) == 4 and isinstance(lat, (int, float)) and isinstance(lon, (int, float)):
+                out[icao] = Airport(
+                    icao=icao,
+                    iata=(a.get("iata") or "").strip().upper(),
+                    name=(a.get("name") or "").strip(),
+                    lat=float(lat),
+                    lon=float(lon),
+                    iso_country=(a.get("country") or "").strip().upper(),
+                )
+        return out
+    except Exception:
+        return {}
 
 def load_ourairports_index() -> Dict[str, Airport]:
     """
@@ -218,11 +255,24 @@ def main() -> int:
         return 2
 
     print(f"Loading OurAirports index ({len(icaos)} ICAOs)…")
-    idx = load_ourairports_index()
+    idx: Dict[str, Airport] = {}
+    ourairports_error: Optional[str] = None
+    try:
+        idx = load_ourairports_index()
+    except Exception as e:
+        ourairports_error = f"{type(e).__name__}: {e}"
+        print(
+            "WARNING: Could not download OurAirports airports.csv. "
+            "Falling back to cached data/airports.json if available. "
+            f"Details: {ourairports_error}",
+            file=sys.stderr,
+        )
+        idx = load_cached_airports(out_airports)
 
     airports_payload = {
         "generatedUtc": utc_now_iso(),
         "source": {"name": "OurAirports (public domain)", "url": "https://ourairports.com/data/"},
+        "warnings": ([f"OurAirports download failed; using cached airports.json. {ourairports_error}"] if ourairports_error else []),
         "airports": []
     }
     for icao in icaos:
