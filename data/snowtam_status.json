@@ -1,9 +1,1917 @@
 {
-  "generatedUtc": null,
+  "generatedUtc": "2026-01-09T10:42:44.648321Z",
   "source": {
-    "name": "\u2014",
-    "url": "\u2014"
+    "name": "ROMATSA Aeronautical Information Portal (unofficial)",
+    "url": "https://flightplan.romatsa.ro/init/notam/snowtam"
   },
-  "note": "This file is generated/updated by GitHub Actions every ~10 minutes.",
-  "airports": {}
+  "airports": {
+    "BIKF": {
+      "icao": "BIKF",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=BIKF"
+      }
+    },
+    "BKPR": {
+      "icao": "BKPR",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=BKPR"
+      }
+    },
+    "EBCI": {
+      "icao": "EBCI",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EBCI"
+      }
+    },
+    "EDDB": {
+      "icao": "EDDB",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EDDB"
+      }
+    },
+    "EDDH": {
+      "icao": "EDDH",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EDDH"
+      }
+    },
+    "EDDK": {
+      "icao": "EDDK",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EDDK"
+      }
+    },
+    "EDDN": {
+      "icao": "EDDN",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EDDN"
+      }
+    },
+    "EDDS": {
+      "icao": "EDDS",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EDDS"
+      }
+    },
+    "EDFH": {
+      "icao": "EDFH",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EDFH"
+      }
+    },
+    "EDJA": {
+      "icao": "EDJA",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EDJA"
+      }
+    },
+    "EDLW": {
+      "icao": "EDLW",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EDLW"
+      }
+    },
+    "EDNY": {
+      "icao": "EDNY",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EDNY"
+      }
+    },
+    "EDSB": {
+      "icao": "EDSB",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EDSB"
+      }
+    },
+    "EETN": {
+      "icao": "EETN",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EETN"
+      }
+    },
+    "EFTU": {
+      "icao": "EFTU",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EFTU"
+      }
+    },
+    "EGBB": {
+      "icao": "EGBB",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EGBB"
+      }
+    },
+    "EGGP": {
+      "icao": "EGGP",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EGGP"
+      }
+    },
+    "EGGW": {
+      "icao": "EGGW",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EGGW"
+      }
+    },
+    "EGKK": {
+      "icao": "EGKK",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EGKK"
+      }
+    },
+    "EGNM": {
+      "icao": "EGNM",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EGNM"
+      }
+    },
+    "EGPD": {
+      "icao": "EGPD",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EGPD"
+      }
+    },
+    "EGPF": {
+      "icao": "EGPF",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EGPF"
+      }
+    },
+    "EHBK": {
+      "icao": "EHBK",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EHBK"
+      }
+    },
+    "EHEH": {
+      "icao": "EHEH",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EHEH"
+      }
+    },
+    "EKBI": {
+      "icao": "EKBI",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EKBI"
+      }
+    },
+    "EKCH": {
+      "icao": "EKCH",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EKCH"
+      }
+    },
+    "ENAL": {
+      "icao": "ENAL",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=ENAL"
+      }
+    },
+    "ENBR": {
+      "icao": "ENBR",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=ENBR"
+      }
+    },
+    "ENGM": {
+      "icao": "ENGM",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=ENGM"
+      }
+    },
+    "ENHD": {
+      "icao": "ENHD",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=ENHD"
+      }
+    },
+    "ENTC": {
+      "icao": "ENTC",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=ENTC"
+      }
+    },
+    "ENTO": {
+      "icao": "ENTO",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=ENTO"
+      }
+    },
+    "ENVA": {
+      "icao": "ENVA",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=ENVA"
+      }
+    },
+    "ENZV": {
+      "icao": "ENZV",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=ENZV"
+      }
+    },
+    "EPGD": {
+      "icao": "EPGD",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EPGD"
+      }
+    },
+    "EPKK": {
+      "icao": "EPKK",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EPKK"
+      }
+    },
+    "EPKT": {
+      "icao": "EPKT",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EPKT"
+      }
+    },
+    "EPLB": {
+      "icao": "EPLB",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EPLB"
+      }
+    },
+    "EPMO": {
+      "icao": "EPMO",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EPMO"
+      }
+    },
+    "EPPO": {
+      "icao": "EPPO",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EPPO"
+      }
+    },
+    "EPRA": {
+      "icao": "EPRA",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EPRA"
+      }
+    },
+    "EPRZ": {
+      "icao": "EPRZ",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EPRZ"
+      }
+    },
+    "EPSC": {
+      "icao": "EPSC",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EPSC"
+      }
+    },
+    "EPSY": {
+      "icao": "EPSY",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EPSY"
+      }
+    },
+    "EPWA": {
+      "icao": "EPWA",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EPWA"
+      }
+    },
+    "EPWR": {
+      "icao": "EPWR",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EPWR"
+      }
+    },
+    "ESGG": {
+      "icao": "ESGG",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=ESGG"
+      }
+    },
+    "ESKN": {
+      "icao": "ESKN",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=ESKN"
+      }
+    },
+    "ESMS": {
+      "icao": "ESMS",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=ESMS"
+      }
+    },
+    "ESSA": {
+      "icao": "ESSA",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=ESSA"
+      }
+    },
+    "EYKA": {
+      "icao": "EYKA",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EYKA"
+      }
+    },
+    "EYPA": {
+      "icao": "EYPA",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EYPA"
+      }
+    },
+    "EYVI": {
+      "icao": "EYVI",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=EYVI"
+      }
+    },
+    "GCFV": {
+      "icao": "GCFV",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=GCFV"
+      }
+    },
+    "GCLP": {
+      "icao": "GCLP",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=GCLP"
+      }
+    },
+    "GCTS": {
+      "icao": "GCTS",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=GCTS"
+      }
+    },
+    "GMAD": {
+      "icao": "GMAD",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=GMAD"
+      }
+    },
+    "GMMN": {
+      "icao": "GMMN",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=GMMN"
+      }
+    },
+    "GMMX": {
+      "icao": "GMMX",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=GMMX"
+      }
+    },
+    "HEGN": {
+      "icao": "HEGN",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=HEGN"
+      }
+    },
+    "HEMA": {
+      "icao": "HEMA",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=HEMA"
+      }
+    },
+    "HESH": {
+      "icao": "HESH",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=HESH"
+      }
+    },
+    "HESX": {
+      "icao": "HESX",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=HESX"
+      }
+    },
+    "LATI": {
+      "icao": "LATI",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LATI"
+      }
+    },
+    "LBPD": {
+      "icao": "LBPD",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LBPD"
+      }
+    },
+    "LBSF": {
+      "icao": "LBSF",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LBSF"
+      }
+    },
+    "LBWN": {
+      "icao": "LBWN",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LBWN"
+      }
+    },
+    "LCLK": {
+      "icao": "LCLK",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LCLK"
+      }
+    },
+    "LCPH": {
+      "icao": "LCPH",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LCPH"
+      }
+    },
+    "LEAL": {
+      "icao": "LEAL",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LEAL"
+      }
+    },
+    "LEBB": {
+      "icao": "LEBB",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LEBB"
+      }
+    },
+    "LEBL": {
+      "icao": "LEBL",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LEBL"
+      }
+    },
+    "LECH": {
+      "icao": "LECH",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LECH"
+      }
+    },
+    "LEMD": {
+      "icao": "LEMD",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LEMD"
+      }
+    },
+    "LEMG": {
+      "icao": "LEMG",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LEMG"
+      }
+    },
+    "LEVC": {
+      "icao": "LEVC",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LEVC"
+      }
+    },
+    "LEXJ": {
+      "icao": "LEXJ",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LEXJ"
+      }
+    },
+    "LEZG": {
+      "icao": "LEZG",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LEZG"
+      }
+    },
+    "LEZL": {
+      "icao": "LEZL",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LEZL"
+      }
+    },
+    "LFBD": {
+      "icao": "LFBD",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LFBD"
+      }
+    },
+    "LFLL": {
+      "icao": "LFLL",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LFLL"
+      }
+    },
+    "LFLS": {
+      "icao": "LFLS",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LFLS"
+      }
+    },
+    "LFMN": {
+      "icao": "LFMN",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LFMN"
+      }
+    },
+    "LFOB": {
+      "icao": "LFOB",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LFOB"
+      }
+    },
+    "LFPO": {
+      "icao": "LFPO",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LFPO"
+      }
+    },
+    "LFSB": {
+      "icao": "LFSB",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LFSB"
+      }
+    },
+    "LGAV": {
+      "icao": "LGAV",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LGAV"
+      }
+    },
+    "LGTS": {
+      "icao": "LGTS",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LGTS"
+      }
+    },
+    "LHBP": {
+      "icao": "LHBP",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LHBP"
+      }
+    },
+    "LHDC": {
+      "icao": "LHDC",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LHDC"
+      }
+    },
+    "LIBD": {
+      "icao": "LIBD",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LIBD"
+      }
+    },
+    "LIBG": {
+      "icao": "LIBG",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LIBG"
+      }
+    },
+    "LIBP": {
+      "icao": "LIBP",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LIBP"
+      }
+    },
+    "LIBR": {
+      "icao": "LIBR",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LIBR"
+      }
+    },
+    "LICA": {
+      "icao": "LICA",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LICA"
+      }
+    },
+    "LICC": {
+      "icao": "LICC",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LICC"
+      }
+    },
+    "LICJ": {
+      "icao": "LICJ",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LICJ"
+      }
+    },
+    "LIMC": {
+      "icao": "LIMC",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LIMC"
+      }
+    },
+    "LIME": {
+      "icao": "LIME",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LIME"
+      }
+    },
+    "LIMF": {
+      "icao": "LIMF",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LIMF"
+      }
+    },
+    "LIMJ": {
+      "icao": "LIMJ",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LIMJ"
+      }
+    },
+    "LIPE": {
+      "icao": "LIPE",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LIPE"
+      }
+    },
+    "LIPH": {
+      "icao": "LIPH",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LIPH"
+      }
+    },
+    "LIPQ": {
+      "icao": "LIPQ",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LIPQ"
+      }
+    },
+    "LIPR": {
+      "icao": "LIPR",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LIPR"
+      }
+    },
+    "LIPX": {
+      "icao": "LIPX",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LIPX"
+      }
+    },
+    "LIPY": {
+      "icao": "LIPY",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LIPY"
+      }
+    },
+    "LIPZ": {
+      "icao": "LIPZ",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LIPZ"
+      }
+    },
+    "LIRF": {
+      "icao": "LIRF",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LIRF"
+      }
+    },
+    "LIRN": {
+      "icao": "LIRN",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LIRN"
+      }
+    },
+    "LIRP": {
+      "icao": "LIRP",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LIRP"
+      }
+    },
+    "LIRZ": {
+      "icao": "LIRZ",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LIRZ"
+      }
+    },
+    "LJLJ": {
+      "icao": "LJLJ",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LJLJ"
+      }
+    },
+    "LKMT": {
+      "icao": "LKMT",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LKMT"
+      }
+    },
+    "LKPR": {
+      "icao": "LKPR",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LKPR"
+      }
+    },
+    "LLBG": {
+      "icao": "LLBG",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LLBG"
+      }
+    },
+    "LMML": {
+      "icao": "LMML",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LMML"
+      }
+    },
+    "LOWW": {
+      "icao": "LOWW",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LOWW"
+      }
+    },
+    "LPFR": {
+      "icao": "LPFR",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LPFR"
+      }
+    },
+    "LPMA": {
+      "icao": "LPMA",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LPMA"
+      }
+    },
+    "LPPR": {
+      "icao": "LPPR",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LPPR"
+      }
+    },
+    "LPPS": {
+      "icao": "LPPS",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LPPS"
+      }
+    },
+    "LPPT": {
+      "icao": "LPPT",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LPPT"
+      }
+    },
+    "LQBK": {
+      "icao": "LQBK",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LQBK"
+      }
+    },
+    "LQSA": {
+      "icao": "LQSA",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LQSA"
+      }
+    },
+    "LQTZ": {
+      "icao": "LQTZ",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LQTZ"
+      }
+    },
+    "LRBC": {
+      "icao": "LRBC",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LRBC"
+      }
+    },
+    "LRBS": {
+      "icao": "LRBS",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LRBS"
+      }
+    },
+    "LRBV": {
+      "icao": "LRBV",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LRBV"
+      }
+    },
+    "LRCL": {
+      "icao": "LRCL",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LRCL"
+      }
+    },
+    "LRCV": {
+      "icao": "LRCV",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LRCV"
+      }
+    },
+    "LRIA": {
+      "icao": "LRIA",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LRIA"
+      }
+    },
+    "LROP": {
+      "icao": "LROP",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LROP"
+      }
+    },
+    "LRSB": {
+      "icao": "LRSB",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LRSB"
+      }
+    },
+    "LRSM": {
+      "icao": "LRSM",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LRSM"
+      }
+    },
+    "LRSV": {
+      "icao": "LRSV",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LRSV"
+      }
+    },
+    "LRTM": {
+      "icao": "LRTM",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LRTM"
+      }
+    },
+    "LRTR": {
+      "icao": "LRTR",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LRTR"
+      }
+    },
+    "LTAC": {
+      "icao": "LTAC",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LTAC"
+      }
+    },
+    "LTFM": {
+      "icao": "LTFM",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LTFM"
+      }
+    },
+    "LUKK": {
+      "icao": "LUKK",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LUKK"
+      }
+    },
+    "LWOH": {
+      "icao": "LWOH",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LWOH"
+      }
+    },
+    "LWSK": {
+      "icao": "LWSK",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LWSK"
+      }
+    },
+    "LYBE": {
+      "icao": "LYBE",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LYBE"
+      }
+    },
+    "LYNI": {
+      "icao": "LYNI",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LYNI"
+      }
+    },
+    "LYPG": {
+      "icao": "LYPG",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LYPG"
+      }
+    },
+    "LZIB": {
+      "icao": "LZIB",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LZIB"
+      }
+    },
+    "LZKZ": {
+      "icao": "LZKZ",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LZKZ"
+      }
+    },
+    "LZTT": {
+      "icao": "LZTT",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=LZTT"
+      }
+    },
+    "OEJN": {
+      "icao": "OEJN",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=OEJN"
+      }
+    },
+    "OEMA": {
+      "icao": "OEMA",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=OEMA"
+      }
+    },
+    "OJAI": {
+      "icao": "OJAI",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=OJAI"
+      }
+    },
+    "OMAA": {
+      "icao": "OMAA",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=OMAA"
+      }
+    },
+    "OMDB": {
+      "icao": "OMDB",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=OMDB"
+      }
+    },
+    "UAAA": {
+      "icao": "UAAA",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=UAAA"
+      }
+    },
+    "UBBB": {
+      "icao": "UBBB",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=UBBB"
+      }
+    },
+    "UDSG": {
+      "icao": "UDSG",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=UDSG"
+      }
+    },
+    "UDYZ": {
+      "icao": "UDYZ",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=UDYZ"
+      }
+    },
+    "UGKO": {
+      "icao": "UGKO",
+      "hasSnowtam": false,
+      "severity": "unknown",
+      "receivedUtc": null,
+      "error": "<urlopen error [SSL: DH_KEY_TOO_SMALL] dh key too small (_ssl.c:1016)>",
+      "hash": "3f0293745a620247",
+      "source": {
+        "name": "ROMATSA Aeronautical Information Portal (unofficial page)",
+        "url": "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad=UGKO"
+      }
+    }
+  }
 }
