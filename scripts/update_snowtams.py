@@ -322,7 +322,7 @@ def fetch_one_snowtam(icao: str) -> Tuple[str, dict]:
 
     except HTTPError as e:
         # Many aerodromes may not be supported by this endpoint; treat as "no snowtam" for common 4xx.
-        sev = "ok" if 400 <= getattr(e, "code", 0) < 500 else "unknown"
+        sev = "unknown"
         return icao, {
             "icao": icao,
             "hasSnowtam": False,
@@ -393,25 +393,47 @@ def main() -> int:
                 "country": ap.iso_country
             })
 
-    # Fetch SNOWTAM pages (incremental polling)
-    # Hitting 159 aerodromes every 10 minutes can take too long and may cause external sites to throttle.
-    # Instead, poll a slice each run and keep the last known status for the rest.
+    # Fetch SNOWTAM pages
+    #
+    # NOTE on coverage:
+    # The ROMATSA endpoint is an *unofficial convenience page* and may not return SNOWTAMs for every
+    # aerodrome world-wide. When an aerodrome cannot be queried (HTTP errors/timeouts), we mark it
+    # as severity=unknown so the UI does not misleadingly show it as green/OK.
+    #
+    # Runtime:
+    # By default we poll *all* aerodromes each run. If you need to reduce load/runtime, set
+    # MAX_SNOWTAM_AERODROMES to a smaller number and the script will rotate through the list.
     print("Fetching SNOWTAMs…", flush=True)
+
     previous_status = load_previous_status(out_status)
     status_airports: Dict[str, dict] = dict(previous_status)  # start from previous snapshot
 
     poll_state_path = f"{repo_root}/data/poll_state.json"
-    max_poll = int(os.environ.get("MAX_SNOWTAM_AERODROMES", "60"))
+    max_poll = int(os.environ.get("MAX_SNOWTAM_AERODROMES", str(len(icaos))))
     max_poll = max(10, min(max_poll, len(icaos)))
-    start_index = load_poll_state(poll_state_path) % len(icaos)
-    slice_icaos = (icaos[start_index:start_index + max_poll] + icaos[:max(0, (start_index + max_poll) - len(icaos))])
-    next_index = (start_index + max_poll) % len(icaos)
-    save_poll_state(poll_state_path, next_index)
 
-    print(f"Polling {len(slice_icaos)}/{len(icaos)} aerodromes this run (startIndex={start_index}, nextIndex={next_index})", flush=True)
+    if max_poll >= len(icaos):
+        # Poll everything on every run (recommended for operational use).
+        slice_icaos = list(icaos)
+        start_index = 0
+        next_index = 0
+        print(f"Polling ALL aerodromes this run: {len(slice_icaos)}/{len(icaos)}", flush=True)
+    else:
+        # Rotating slice mode.
+        start_index = load_poll_state(poll_state_path) % len(icaos)
+        slice_icaos = (
+            icaos[start_index:start_index + max_poll]
+            + icaos[:max(0, (start_index + max_poll) - len(icaos))]
+        )
+        next_index = (start_index + max_poll) % len(icaos)
+        save_poll_state(poll_state_path, next_index)
+        print(
+            f"Polling {len(slice_icaos)}/{len(icaos)} aerodromes this run (startIndex={start_index}, nextIndex={next_index})",
+            flush=True,
+        )
 
     # Threaded fetch: bounded runtime and steady log output.
-    max_workers = int(os.environ.get("SNOWTAM_WORKERS", "6"))
+    max_workers = int(os.environ.get("SNOWTAM_WORKERS", "8"))
     max_workers = max(2, min(max_workers, 12))
     completed = 0
     start_ts = time.time()
@@ -433,7 +455,7 @@ def main() -> int:
                     "source": {"name": "ROMATSA Aeronautical Information Portal (unofficial page)", "url": SNOWTAM_URL.format(icao=icao)},
                 }
             completed += 1
-            if completed % 5 == 0 or completed == len(slice_icaos):
+            if completed % 10 == 0 or completed == len(slice_icaos):
                 elapsed = int(time.time() - start_ts)
                 print(f"Progress: {completed}/{len(slice_icaos)} done (elapsed {elapsed}s)", flush=True)
 
