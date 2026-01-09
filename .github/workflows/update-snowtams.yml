@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   update:
-    timeout-minutes: 8
+    timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -33,9 +33,11 @@ jobs:
           pip install -r scripts/requirements.txt
 
       - name: Generate data/airports.json and data/snowtam_status.json
+        env:
+          SNOWTAM_WORKERS: "10"
+          MAX_SNOWTAM_AERODROMES: "159"
         run: |
           python -u scripts/update_snowtams.py
-
       - name: Commit changes (if any)
         uses: EndBug/add-and-commit@v9
         with:
