@@ -14,15 +14,20 @@ import json
 import re
 import sys
 import time
+import os
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Dict, List, Optional, Tuple
 from urllib.request import urlopen, Request
 from urllib.error import URLError, HTTPError
 
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
 from bs4 import BeautifulSoup
 
 OURAIRPORTS_CSV = "https://davidmegginson.github.io/ourairports-data/airports.csv"
+# Public (unofficial) SNOWTAM endpoint used by ROMATSA flightplan portal.
+# WARNING: This is not a global AIS. Expect some aerodromes to return empty / errors.
 SNOWTAM_URL = "https://flightplan.romatsa.ro/init/notam/getsnowtam?ad={icao}"
 
 USER_AGENT = "Mozilla/5.0 (compatible; WIZZ-SNOWTAM-Watch/1.0; +https://github.com/)"
@@ -52,8 +57,12 @@ def read_airports_txt(path: str) -> List[str]:
             icaos.append(code)
     return sorted(set(icaos))
 
-def fetch_url(url: str, timeout: int = 35, retries: int = 3, backoff_s: float = 2.0) -> bytes:
-    """Fetch URL with small retry/backoff to reduce flaky Action failures."""
+def fetch_url(url: str, timeout: int = 8, retries: int = 1, backoff_s: float = 1.0) -> bytes:
+    """Fetch URL with retry/backoff.
+
+    IMPORTANT: Keep timeouts low. This job runs for many aerodromes; a high per-request timeout
+    can easily push total runtime into tens of minutes.
+    """
     last_err: Optional[Exception] = None
     for attempt in range(1, retries + 1):
         try:
@@ -243,6 +252,97 @@ def stable_hash(*parts: str) -> str:
         h.update(b"\n---\n")
     return h.hexdigest()[:16]
 
+
+def load_previous_status(path: str) -> Dict[str, dict]:
+    """Load previously generated snowtam_status.json (if available) so we can update incrementally."""
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            payload = json.load(f)
+        airports = payload.get("airports")
+        if isinstance(airports, dict):
+            return airports
+    except Exception:
+        pass
+    return {}
+
+
+def load_poll_state(path: str) -> int:
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            st = json.load(f)
+        idx = st.get("nextIndex")
+        return int(idx) if isinstance(idx, int) else 0
+    except Exception:
+        return 0
+
+
+def save_poll_state(path: str, next_index: int) -> None:
+    try:
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump({"generatedUtc": utc_now_iso(), "nextIndex": next_index}, f, ensure_ascii=False, indent=2)
+    except Exception:
+        # state is optional; don't fail the run because of it
+        return
+
+
+def fetch_one_snowtam(icao: str) -> Tuple[str, dict]:
+    """Fetch + parse one aerodrome SNOWTAM page."""
+    url = SNOWTAM_URL.format(icao=icao)
+    try:
+        # Keep tight timeouts: this is best-effort scraping, and we prefer a fresh-but-partial
+        # dataset over a job that stalls for many minutes.
+        html = fetch_url(url, timeout=8, retries=1).decode("utf-8", errors="replace")
+        received_text, raw, dec, dec2 = extract_text_blocks(html)
+        received_iso = received_to_iso(received_text)
+
+        has_snowtam = bool(raw.strip())
+        sev, summary = snowtam_severity(raw, dec)
+
+        snowtam_no = ""
+        m = re.search(r"\(SNOWTAM\s+([0-9]{4})", raw, re.IGNORECASE)
+        if m:
+            snowtam_no = m.group(1)
+
+        h = stable_hash(raw.strip(), dec.strip(), dec2.strip())
+
+        return icao, {
+            "icao": icao,
+            "hasSnowtam": has_snowtam,
+            "severity": ("ok" if not has_snowtam else sev),
+            "receivedUtc": received_iso,
+            "receivedText": received_text,
+            "snowtamNumber": snowtam_no,
+            "raw": raw.strip(),
+            "decode": dec.strip(),
+            "decodeOpposite": dec2.strip(),
+            "summary": summary,
+            "hash": h,
+            "source": {"name": "ROMATSA Aeronautical Information Portal (unofficial page)", "url": url},
+        }
+
+    except HTTPError as e:
+        # Many aerodromes may not be supported by this endpoint; treat as "no snowtam" for common 4xx.
+        sev = "ok" if 400 <= getattr(e, "code", 0) < 500 else "unknown"
+        return icao, {
+            "icao": icao,
+            "hasSnowtam": False,
+            "severity": sev,
+            "receivedUtc": None,
+            "error": f"HTTPError {getattr(e, 'code', '')}: {e}",
+            "hash": stable_hash("httperror", str(getattr(e, "code", ""))),
+            "source": {"name": "ROMATSA Aeronautical Information Portal (unofficial page)", "url": url},
+        }
+    except Exception as e:
+        return icao, {
+            "icao": icao,
+            "hasSnowtam": False,
+            "severity": "unknown",
+            "receivedUtc": None,
+            "error": f"{type(e).__name__}: {e}",
+            "hash": stable_hash("error", str(e)),
+            "source": {"name": "ROMATSA Aeronautical Information Portal (unofficial page)", "url": url},
+        }
+
 def main() -> int:
     repo_root = "."
     airports_txt = f"{repo_root}/airports.txt"
@@ -254,7 +354,7 @@ def main() -> int:
         print("No ICAO codes found in airports.txt", file=sys.stderr)
         return 2
 
-    print(f"Loading OurAirports index ({len(icaos)} ICAOs)…")
+    print(f"Loading OurAirports index ({len(icaos)} ICAOs)…", flush=True)
     idx: Dict[str, Airport] = {}
     ourairports_error: Optional[str] = None
     try:
@@ -266,6 +366,7 @@ def main() -> int:
             "Falling back to cached data/airports.json if available. "
             f"Details: {ourairports_error}",
             file=sys.stderr,
+            flush=True,
         )
         idx = load_cached_airports(out_airports)
 
@@ -292,58 +393,49 @@ def main() -> int:
                 "country": ap.iso_country
             })
 
-    # Fetch SNOWTAM pages
-    print("Fetching SNOWTAMs…")
-    status_airports: Dict[str, dict] = {}
+    # Fetch SNOWTAM pages (incremental polling)
+    # Hitting 159 aerodromes every 10 minutes can take too long and may cause external sites to throttle.
+    # Instead, poll a slice each run and keep the last known status for the rest.
+    print("Fetching SNOWTAMs…", flush=True)
+    previous_status = load_previous_status(out_status)
+    status_airports: Dict[str, dict] = dict(previous_status)  # start from previous snapshot
 
-    for n, icao in enumerate(icaos, start=1):
-        url = SNOWTAM_URL.format(icao=icao)
-        try:
-            html = fetch_url(url, timeout=35).decode("utf-8", errors="replace")
-            received_text, raw, dec, dec2 = extract_text_blocks(html)
-            received_iso = received_to_iso(received_text)
+    poll_state_path = f"{repo_root}/data/poll_state.json"
+    max_poll = int(os.environ.get("MAX_SNOWTAM_AERODROMES", "60"))
+    max_poll = max(10, min(max_poll, len(icaos)))
+    start_index = load_poll_state(poll_state_path) % len(icaos)
+    slice_icaos = (icaos[start_index:start_index + max_poll] + icaos[:max(0, (start_index + max_poll) - len(icaos))])
+    next_index = (start_index + max_poll) % len(icaos)
+    save_poll_state(poll_state_path, next_index)
 
-            has_snowtam = bool(raw.strip())
-            sev, summary = snowtam_severity(raw, dec)
+    print(f"Polling {len(slice_icaos)}/{len(icaos)} aerodromes this run (startIndex={start_index}, nextIndex={next_index})", flush=True)
 
-            # try to extract snowtam number
-            snowtam_no = ""
-            m = re.search(r"\(SNOWTAM\s+([0-9]{4})", raw, re.IGNORECASE)
-            if m:
-                snowtam_no = m.group(1)
-
-            h = stable_hash(raw.strip(), dec.strip(), dec2.strip())
-
-            status_airports[icao] = {
-                "icao": icao,
-                "hasSnowtam": has_snowtam,
-                "severity": ("ok" if not has_snowtam else sev),
-                "receivedUtc": received_iso,
-                "receivedText": received_text,
-                "snowtamNumber": snowtam_no,
-                "raw": raw.strip(),
-                "decode": dec.strip(),
-                "decodeOpposite": dec2.strip(),
-                "summary": summary,
-                "hash": h,
-                "source": {"name": "ROMATSA Aeronautical Information Portal (unofficial page)", "url": url},
-            }
-        except Exception as e:
-            status_airports[icao] = {
-                "icao": icao,
-                "hasSnowtam": False,
-                "severity": "unknown",
-                "receivedUtc": None,
-                "error": str(e),
-                "hash": stable_hash("error", str(e)),
-                "source": {"name": "ROMATSA Aeronautical Information Portal (unofficial page)", "url": url},
-            }
-
-        # gentle pacing to reduce load on the external site
-        if n % 10 == 0:
-            time.sleep(1.0)
-
-        print(f"{n:>3}/{len(icaos)} {icao} done")
+    # Threaded fetch: bounded runtime and steady log output.
+    max_workers = int(os.environ.get("SNOWTAM_WORKERS", "6"))
+    max_workers = max(2, min(max_workers, 12))
+    completed = 0
+    start_ts = time.time()
+    with ThreadPoolExecutor(max_workers=max_workers) as ex:
+        futs = {ex.submit(fetch_one_snowtam, icao): icao for icao in slice_icaos}
+        for fut in as_completed(futs):
+            icao = futs[fut]
+            try:
+                icao2, payload = fut.result()
+                status_airports[icao2] = payload
+            except Exception as e:
+                status_airports[icao] = {
+                    "icao": icao,
+                    "hasSnowtam": False,
+                    "severity": "unknown",
+                    "receivedUtc": None,
+                    "error": f"FutureError: {type(e).__name__}: {e}",
+                    "hash": stable_hash("futureerror", str(e)),
+                    "source": {"name": "ROMATSA Aeronautical Information Portal (unofficial page)", "url": SNOWTAM_URL.format(icao=icao)},
+                }
+            completed += 1
+            if completed % 5 == 0 or completed == len(slice_icaos):
+                elapsed = int(time.time() - start_ts)
+                print(f"Progress: {completed}/{len(slice_icaos)} done (elapsed {elapsed}s)", flush=True)
 
     status_payload = {
         "generatedUtc": utc_now_iso(),
@@ -357,7 +449,7 @@ def main() -> int:
     with open(out_status, "w", encoding="utf-8") as f:
         json.dump(status_payload, f, ensure_ascii=False, indent=2)
 
-    print("Wrote:", out_airports, out_status)
+    print("Wrote:", out_airports, out_status, flush=True)
     return 0
 
 if __name__ == "__main__":
