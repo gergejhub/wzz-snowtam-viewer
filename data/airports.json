@@ -1,5 +1,5 @@
 {
-  "generatedUtc": "2026-01-10T02:19:58.024346Z",
+  "generatedUtc": "2026-01-10T03:43:22.909695Z",
   "source": {
     "name": "OurAirports (public domain)",
     "url": "https://ourairports.com/data/"
@@ -26,8 +26,8 @@
       "icao": "EBCI",
       "iata": "CRL",
       "name": "Brussels South Charleroi Airport",
-      "lat": 50.460982,
-      "lon": 4.457158,
+      "lat": 50.461963,
+      "lon": 4.459562,
       "country": "BE"
     },
     {
@@ -138,8 +138,8 @@
       "icao": "EGGP",
       "iata": "LPL",
       "name": "Liverpool John Lennon Airport",
-      "lat": 53.333599,
-      "lon": -2.84972,
+      "lat": 53.334863,
+      "lon": -2.849637,
       "country": "GB"
     },
     {
@@ -410,16 +410,16 @@
       "icao": "EYKA",
       "iata": "KUN",
       "name": "Kaunas International Airport",
-      "lat": 54.96390151977539,
-      "lon": 24.084800720214844,
+      "lat": 54.963965,
+      "lon": 24.08582,
       "country": "LT"
     },
     {
       "icao": "EYPA",
       "iata": "PLQ",
       "name": "Palanga International Airport",
-      "lat": 55.973201751708984,
-      "lon": 21.093900680541992,
+      "lat": 55.973202,
+      "lon": 21.093901,
       "country": "LT"
     },
     {
@@ -1010,8 +1010,8 @@
       "icao": "LQTZ",
       "iata": "TZL",
       "name": "Tuzla International Airport",
-      "lat": 44.458698,
-      "lon": 18.7248,
+      "lat": 44.459858,
+      "lon": 18.723627,
       "country": "BA"
     },
     {
@@ -1266,8 +1266,8 @@
       "icao": "UDYZ",
       "iata": "EVN",
       "name": "Zvartnots International Airport",
-      "lat": 40.1473007202,
-      "lon": 44.3959007263,
+      "lat": 40.148941,
+      "lon": 44.397887,
       "country": "AM"
     },
     {
